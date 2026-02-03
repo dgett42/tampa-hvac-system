@@ -1,65 +1,104 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function Home() {
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    issue: "",
+    priority: "medium",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+
+    const { error } = await supabase.from("leads").insert([
+      {
+        name: form.name.trim(),
+        phone: form.phone.trim(),
+        email: form.email.trim() || null,
+        issue: form.issue.trim(),
+        priority: form.priority,
+      },
+    ]);
+
+    setLoading(false);
+
+    if (error) {
+      console.error(error);
+      alert(error.message || "Failed to submit");
+      return;
+    }
+
+    alert("Submitted!");
+    setForm({ name: "", phone: "", email: "", issue: "", priority: "medium" });
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className="min-h-screen flex items-center justify-center p-6">
+      <div className="w-full max-w-md rounded-2xl border p-6 shadow-sm">
+        <h1 className="text-2xl font-semibold">Tampa HVAC Service Request</h1>
+        <p className="text-sm text-gray-600 mt-1">
+          Fill this out and we’ll contact you ASAP.
+        </p>
+
+        <form onSubmit={submit} className="mt-6 space-y-3">
+          <input
+            className="w-full rounded-lg border p-2"
+            placeholder="Name *"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            required
+          />
+
+          <input
+            className="w-full rounded-lg border p-2"
+            placeholder="Phone *"
+            value={form.phone}
+            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            required
+          />
+
+          <input
+            className="w-full rounded-lg border p-2"
+            placeholder="Email (optional)"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+          />
+
+          <select
+            className="w-full rounded-lg border p-2"
+            value={form.priority}
+            onChange={(e) => setForm({ ...form, priority: e.target.value })}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="emergency">Emergency</option>
+          </select>
+
+          <textarea
+            className="w-full rounded-lg border p-2"
+            placeholder="Describe the issue *"
+            rows={4}
+            value={form.issue}
+            onChange={(e) => setForm({ ...form, issue: e.target.value })}
+            required
+          />
+
+          <button
+            className="w-full rounded-lg bg-black text-white p-2 disabled:opacity-60"
+            disabled={loading}
           >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            {loading ? "Submitting..." : "Request Service"}
+          </button>
+        </form>
+      </div>
+    </main>
   );
 }
