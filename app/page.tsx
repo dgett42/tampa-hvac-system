@@ -15,30 +15,50 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
+  e.preventDefault();
+  setLoading(true);
 
-    const { error } = await supabase.from("leads").insert([
-      {
-        name: form.name.trim(),
-        phone: form.phone.trim(),
-        email: form.email.trim() || null,
-        issue: form.issue.trim(),
-        priority: form.priority,
-      },
-    ]);
+  const { error } = await supabase.from("leads").insert([
+    {
+      name: form.name.trim(),
+      phone: form.phone.trim(),
+      email: form.email.trim() || null,
+      issue: form.issue.trim(),
+      priority: form.priority,
+    },
+  ]);
 
+  if (error) {
+    console.error(error);
+    alert(error.message || "Failed to submit");
     setLoading(false);
-
-    if (error) {
-      console.error(error);
-      alert(error.message || "Failed to submit");
-      return;
-    }
-
-    alert("Submitted!");
-    setForm({ name: "", phone: "", email: "", issue: "", priority: "medium" });
+    return;
   }
+
+  // 👇 ADD THIS PART
+  await fetch("/api/sms", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: form.name,
+      phone: form.phone,
+      issue: form.issue,
+      priority: form.priority,
+    }),
+  });
+
+  alert("Submitted!");
+
+  setForm({
+    name: "",
+    phone: "",
+    email: "",
+    issue: "",
+    priority: "medium",
+  });
+
+  setLoading(false);
+}
 
   return (
     <main className="min-h-screen flex items-center justify-center p-6">
