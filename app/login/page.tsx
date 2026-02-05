@@ -1,7 +1,4 @@
 "use client";
-import { getSupabase } from "@/lib/supabaseClient";
-const supabase = getSupabase();
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -10,7 +7,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function submit(e: React.FormEvent) {
+  async function submit(e: React.SubmitEvent) {
     e.preventDefault();
     setLoading(true);
 
