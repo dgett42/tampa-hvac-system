@@ -1,9 +1,9 @@
 "use client";
-
 import { getSupabase } from "@/lib/supabaseClient";
+const supabase = getSupabase();
+
 import { useState } from "react";
 
-const supabase = getSupabase();
 
 export default function Home() {
   const [form, setForm] = useState({
