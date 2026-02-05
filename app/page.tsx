@@ -1,13 +1,11 @@
 "use client";
-import { getSupabase } from "@/lib/supabaseClient";
-const supabase = getSupabase();
-if (!supabase) throw new Error("Supabase client not available on server.");
-
 
 import { useState } from "react";
-
+import { getSupabase } from "@/lib/supabaseClient";
 
 export default function Home() {
+  const supabase = getSupabase(); // will be null during SSR/build, real in browser
+
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -18,39 +16,41 @@ export default function Home() {
 
   const [loading, setLoading] = useState(false);
 
-  async function submit(e: React.SyntheticEvent<HTMLFormElement>) {
-  e.preventDefault();
-  setLoading(true);
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    console.log("Submitting form:", form);
+    try {
+      if (!supabase) {
+        alert("App is still loading. Please refresh and try again.");
+        return;
+      }
 
-    const { data, error } = await supabase.from("leads").insert([
-      {
-        name: form.name.trim(),
-        phone: form.phone.trim(),
-        email: form.email.trim() || null,
-        issue: form.issue.trim(),
-        priority: form.priority,
-      },
-    ]);
+      const { error } = await supabase.from("leads").insert([
+        {
+          name: form.name.trim(),
+          phone: form.phone.trim(),
+          email: form.email.trim() || null,
+          issue: form.issue.trim(),
+          priority: form.priority,
+        },
+      ]);
 
-    console.log("Insert result:", { data, error });
+      if (error) {
+        console.error(error);
+        alert(error.message || "Failed to submit");
+        return;
+      }
 
-    if (error) {
-      alert(error.message || "Failed to submit");
-      return;
+      alert("Submitted!");
+      setForm({ name: "", phone: "", email: "", issue: "", priority: "medium" });
+    } catch (err: any) {
+      console.error("Submit crashed:", err);
+      alert(err?.message || "Submit crashed. Check console.");
+    } finally {
+      setLoading(false);
     }
-
-    alert("Submitted!");
-    setForm({ name: "", phone: "", email: "", issue: "", priority: "medium" });
-  } catch (err: any) {
-    console.error("Submit crashed:", err);
-    alert(err?.message || "Submit crashed. Check console.");
-  } finally {
-    setLoading(false);
   }
-}
 
 
   return (
