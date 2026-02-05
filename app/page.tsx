@@ -1,6 +1,8 @@
 "use client";
 import { getSupabase } from "@/lib/supabaseClient";
 const supabase = getSupabase();
+if (!supabase) throw new Error("Supabase client not available on server.");
+
 
 import { useState } from "react";
 
