@@ -18,7 +18,7 @@ export default function Home() {
 
   const [loading, setLoading] = useState(false);
 
-  async function submit(e: React.FormEvent) {
+  async function submit(e: React.SyntheticEvent<HTMLFormElement>) {
   e.preventDefault();
   setLoading(true);
 
