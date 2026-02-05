@@ -1,10 +1,11 @@
 "use client";
 import { getSupabase } from "@/lib/supabaseClient";
+const supabase = getSupabase();
 export const dynamic = "force-dynamic";
+
 
 import { useEffect, useState } from "react";
 
-const supabase = getSupabase();
 import {
   ResponsiveContainer,
   LineChart,
