@@ -18,47 +18,36 @@ export default function Home() {
   e.preventDefault();
   setLoading(true);
 
-  const { error } = await supabase.from("leads").insert([
-    {
-      name: form.name.trim(),
-      phone: form.phone.trim(),
-      email: form.email.trim() || null,
-      issue: form.issue.trim(),
-      priority: form.priority,
-    },
-  ]);
+  try {
+    console.log("Submitting form:", form);
 
-  if (error) {
-    console.error(error);
-    alert(error.message || "Failed to submit");
+    const { data, error } = await supabase.from("leads").insert([
+      {
+        name: form.name.trim(),
+        phone: form.phone.trim(),
+        email: form.email.trim() || null,
+        issue: form.issue.trim(),
+        priority: form.priority,
+      },
+    ]);
+
+    console.log("Insert result:", { data, error });
+
+    if (error) {
+      alert(error.message || "Failed to submit");
+      return;
+    }
+
+    alert("Submitted!");
+    setForm({ name: "", phone: "", email: "", issue: "", priority: "medium" });
+  } catch (err: any) {
+    console.error("Submit crashed:", err);
+    alert(err?.message || "Submit crashed. Check console.");
+  } finally {
     setLoading(false);
-    return;
   }
-
-  // 👇 ADD THIS PART
-  await fetch("/api/sms", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: form.name,
-      phone: form.phone,
-      issue: form.issue,
-      priority: form.priority,
-    }),
-  });
-
-  alert("Submitted!");
-
-  setForm({
-    name: "",
-    phone: "",
-    email: "",
-    issue: "",
-    priority: "medium",
-  });
-
-  setLoading(false);
 }
+
 
   return (
     <main className="min-h-screen flex items-center justify-center p-6">
