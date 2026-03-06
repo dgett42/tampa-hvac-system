@@ -15,25 +15,38 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
+  BarChart,
+  Bar,
+  Legend
 } from "recharts";
-import { BarChart, Bar, Legend } from "recharts";
-
 
 
 export default function AdminPage() {
-  const [leads, setLeads] = useState<any[]>([]);
+  type Lead = {
+  id: string;
+  name: string;
+  phone: string;
+  status: string;
+  created_at: string;
+  priority: string;
+  issue: string;
+};
+  const [leads, setLeads] = useState<Lead[]>([]);
 
   async function loadLeads() {
-    const { data, error } = await supabase
-      .from("leads")
-      .select("*")
-      .order("created_at", { ascending: false });
+  const { data, error } = await supabase
+    .from("leads")
+    .select("*")
+    .order("created_at", { ascending: false });
 
-    if (!error) {
-      setLeads(data || []);
-    }
+  if (error) {
+    console.error("loadLeads error:", error);
+    return;
   }
 
+  console.log("loaded leads:", data?.length);
+  setLeads(data ?? []);
+}
   useEffect(() => {
     loadLeads();
   }, []);
@@ -48,11 +61,12 @@ const conversionRate =
 
 const emergencyCount = leads.filter(l => l.priority === "emergency").length;
 
+const now = new Date();
+const sevenDaysAgo = new Date();
+sevenDaysAgo.setDate(now.getDate() - 7);
+
 const thisWeek = leads.filter(l => {
-  const created = new Date(l.created_at);
-  const now = new Date();
-  const diff = (now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24);
-  return diff <= 7;
+  return new Date(l.created_at) >= sevenDaysAgo;
 }).length;
 
 // basic revenue assumption (you can refine later)
