@@ -170,9 +170,9 @@ const statusSeries = [
   </div>
 
   <div className="mt-3 text-sm text-gray-600 flex flex-wrap gap-4">
-    <div>Booked rate: <span className="font-semibold text-black">{bookedRate}%</span></div>
-    <div>Close rate: <span className="font-semibold text-black">{closeRate}%</span></div>
-    <div>Emergency: <span className="font-semibold text-black">{emergencyPct}%</span></div>
+    <div>Booked rate: <span className="font-semibold text-White">{bookedRate}%</span></div>
+    <div>Close rate: <span className="font-semibold text-White">{closeRate}%</span></div>
+    <div>Emergency: <span className="font-semibold text-White">{emergencyPct}%</span></div>
   </div>
 </div>
 
