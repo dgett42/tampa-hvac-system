@@ -1,11 +1,7 @@
 "use client";
-export const dynamic = "force-dynamic";
-import { getSupabase } from "@/lib/supabaseClient";
-const supabase = getSupabase();
-
-
 
 import { useEffect, useState } from "react";
+import { getSupabase } from "@/lib/supabaseClient";
 
 import {
   ResponsiveContainer,
@@ -19,6 +15,11 @@ import {
   Bar,
   Legend
 } from "recharts";
+
+
+export const dynamic = "force-dynamic";
+const supabase = getSupabase();
+
 
 
 export default function AdminPage() {
