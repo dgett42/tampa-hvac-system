@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useEffect, useState } from "react";
 import { getSupabase } from "@/lib/supabaseClient";
 
@@ -16,12 +18,6 @@ import {
   Legend
 } from "recharts";
 
-
-export const dynamic = "force-dynamic";
-const supabase = getSupabase();
-
-
-
 export default function AdminPage() {
   type Lead = {
   id: string;
@@ -32,6 +28,7 @@ export default function AdminPage() {
   priority: string;
   issue: string;
 };
+  const supabase = getSupabase();
   const [leads, setLeads] = useState<Lead[]>([]);
 
   async function loadLeads() {
