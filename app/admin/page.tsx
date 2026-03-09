@@ -19,6 +19,8 @@ import {
 } from "recharts";
 
 export default function AdminPage() {
+  const supabase = getSupabase();
+
   type Lead = {
   id: string;
   name: string;
@@ -28,7 +30,7 @@ export default function AdminPage() {
   priority: string;
   issue: string;
 };
-  const supabase = getSupabase();
+
   const [leads, setLeads] = useState<Lead[]>([]);
 
   async function loadLeads() {
