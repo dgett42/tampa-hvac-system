@@ -25,7 +25,7 @@ export default function AdminPage() {
   id: string;
   name: string;
   phone: string;
-  status: string;
+  status: "new" | "contacted" | "booked" | "closed" | "lost";
   created_at: string;
   priority: string;
   issue: string;
