@@ -25,7 +25,7 @@ export default function AdminPage() {
   id: string;
   name: string;
   phone: string;
-  status: "new" | "contacted" | "booked" | "closed" | "lost";
+  status: string;
   created_at: string;
   priority: string;
   issue: string;
@@ -213,7 +213,12 @@ const statusSeries = [
 
     <p className="mt-2">{lead.issue}</p>
     <div className="text-xs text-gray-500 mt-2">
-      {new Date(lead.created_at).toLocaleString()}
+      {new Date(lead.created_at).toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })}
     </div>
   </div>
 ))}
