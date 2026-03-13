@@ -164,7 +164,7 @@ const statusSeries = [
         <YAxis allowDecimals={false} />
         <Tooltip />
         <Legend />
-        <Bar dataKey="value" />
+        <Bar dataKey="value" fill="#3b82f6" />
       </BarChart>
     </ResponsiveContainer>
   </div>
@@ -201,7 +201,20 @@ const statusSeries = [
 
           loadLeads();
         }}
-        className="border p-2 rounded"
+        className={`border p-2 rounded ${
+          lead.status === "new"
+            ? "bg-blue-100"
+            : lead.status === "contacted"
+            ? "bg-yellow-100"
+            : lead.status === "booked"
+            ? "bg-green-100"
+            : lead.status === "closed"
+            ? "bg-gray-300"
+            : lead.status === "lost"
+            ? "bg-red-100"
+            : ""
+          
+        }`}
       >
         <option value="new">New</option>
         <option value="contacted">Contacted</option>
