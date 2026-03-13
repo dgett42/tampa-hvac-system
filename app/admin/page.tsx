@@ -76,7 +76,7 @@ function lastNDays(n: number) {
   const out: { date: string; count: number }[] = [];
   const now = new Date();
 
-  for (let i = n - 1; i >= 0; i--) {
+  for (let i = n ; i >= 0; i--) {
     const d = new Date(now);
     d.setDate(now.getDate() - i);
     const key = d.toISOString().slice(0, 10); // YYYY-MM-DD
