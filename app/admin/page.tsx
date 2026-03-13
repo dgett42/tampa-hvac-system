@@ -201,7 +201,7 @@ const statusSeries = [
 
           loadLeads();
         }}
-        className={`border p-2 rounded ${
+        className={`border p-2 rounded text-black ${
           lead.status === "new"
             ? "bg-blue-100"
             : lead.status === "contacted"
