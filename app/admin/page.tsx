@@ -85,7 +85,7 @@ function lastNDays(n: number) {
   return out;
 }
 
-const series = lastNDays(6);
+const series = lastNDays(7);
 
 // count leads into buckets
 for (const lead of leads) {
