@@ -147,7 +147,7 @@ const statusSeries = [
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
         <YAxis allowDecimals={false} />
-        <Tooltip labelStyle={{color: "#ff0000ff"}}/>
+        <Tooltip labelStyle={{color: "#000000ff"}}/>
         <Line type="monotone" dataKey="count" strokeWidth={2} dot />
       </LineChart>
     </ResponsiveContainer>
