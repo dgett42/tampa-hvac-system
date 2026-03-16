@@ -162,7 +162,7 @@ const statusSeries = [
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />
         <YAxis allowDecimals={false} />
-        <Tooltip />
+        <Tooltip labelStyle={{color: "#000000ff"}}/>
         <Legend />
         <Bar dataKey="value" fill="#3b82f6" />
       </BarChart>
