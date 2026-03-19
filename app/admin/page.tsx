@@ -29,6 +29,7 @@ export default function AdminPage() {
   created_at: string;
   priority: string;
   issue: string;
+  revenue: number | null;
 };
 
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -69,8 +70,10 @@ const thisWeek = leads.filter(l => {
   return new Date(l.created_at) >= sevenDaysAgo;
 }).length;
 
-// basic revenue assumption (you can refine later)
-const estimatedRevenue = closed * 450; 
+// revenue Per closed lead. 
+const totalRevenue = leads
+  .filter(l => l.status === "closed")
+  .reduce((sum, l) => sum + (l.revenue || 0), 0); 
 
 function lastNDays(n: number) {
   const out: { date: string; count: number }[] = [];
@@ -135,7 +138,7 @@ const statusSeries = [
   <div className="p-4 border rounded-lg">
     <div className="text-sm text-gray-500">Est. Revenue</div>
     <div className="text-xl font-semibold">
-      ${estimatedRevenue.toLocaleString()}
+      ${totalRevenue.toLocaleString()}
     </div>
   </div>
 </div>
@@ -225,6 +228,30 @@ const statusSeries = [
     </div>
 
     <p className="mt-2">{lead.issue}</p>
+
+    {lead.status === "closed" && (
+        <input
+          type="number"
+          placeholder="Enter revenue"
+          className="border p-2 mt-2 rounded w-full"
+          value={lead.revenue || ""}
+          onChange={async (e) => {
+            const value = Number(e.target.value);
+
+            const { error } = await supabase
+            .from("leads")
+            .update({ revenue: value })
+            .eq("id", lead.id);
+
+            if (error) {
+             console.error("Revenue update failed:", error);
+             return;
+          }
+
+      loadLeads();
+    }}
+  />
+)}
     <div className="text-xs text-gray-500 mt-2">
       {new Date(lead.created_at).toLocaleString("en-US", {
         month: "short",
