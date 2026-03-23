@@ -33,6 +33,7 @@ export default function AdminPage() {
 };
 
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [revenueInputs, setRevenueInputs] = useState<Record<string, string>>({});
 
   async function loadLeads() {
   const { data, error } = await supabase
@@ -230,27 +231,49 @@ const statusSeries = [
     <p className="mt-2">{lead.issue}</p>
 
     {lead.status === "closed" && (
-        <input
-          type="number"
-          placeholder="Enter revenue"
-          className="border p-2 mt-2 rounded w-full"
-          value={lead.revenue || ""}
-          onChange={async (e) => {
-            const value = Number(e.target.value);
+  <div className="mt-2 flex gap-2">
+    <input
+      type="text"
+      inputMode="decimal"
+      placeholder="Enter revenue"
+      className="border p-2 rounded w-full text-black bg-white"
+      value={revenueInputs[lead.id] ?? (lead.revenue?.toString() ?? "")}
+      onChange={(e) => {
+        setRevenueInputs((prev) => ({
+          ...prev,
+          [lead.id]: e.target.value,
+        }));
+      }}
+    />
 
-            const { error } = await supabase
-            .from("leads")
-            .update({ revenue: value })
-            .eq("id", lead.id);
+    <button
+      className="px-3 rounded bg-black text-white"
+      onClick={async () => {
+        const raw = revenueInputs[lead.id] ?? "";
+        const value = Number(raw);
 
-            if (error) {
-             console.error("Revenue update failed:", error);
-             return;
-          }
+        if (raw.trim() === "" || Number.isNaN(value)) {
+          alert("Enter a valid revenue amount");
+          return;
+        }
 
-      loadLeads();
-    }}
-  />
+        const { error } = await supabase
+          .from("leads")
+          .update({ revenue: value })
+          .eq("id", lead.id);
+
+        if (error) {
+          console.error("Revenue update failed:", error);
+          alert(error.message);
+          return;
+        }
+
+        loadLeads();
+      }}
+    >
+      Save
+    </button>
+  </div>
 )}
     <div className="text-xs text-gray-500 mt-2">
       {new Date(lead.created_at).toLocaleString("en-US", {
