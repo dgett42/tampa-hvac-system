@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from "react";
 import { getSupabase } from "@/lib/supabaseClient";
+import Navbar from "@/components/Navbar";
 
 import {
   ResponsiveContainer,
@@ -118,6 +119,7 @@ const statusSeries = [
 
   return (
     <main className="p-6">
+      <Navbar />
       <h1 className="text-2xl font-semibold mb-4">Admin Dashboard</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -230,6 +232,8 @@ const statusSeries = [
 
     <p className="mt-2">{lead.issue}</p>
 
+    {/* Show revenue input if lead is closed */}
+    
     {lead.status === "closed" && (
   <div className="mt-2 flex gap-2">
     <input
