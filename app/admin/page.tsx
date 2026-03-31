@@ -118,26 +118,26 @@ const statusSeries = [
 
 
   return (
-    <main className="p-8">
+    <main className="p-9">
       <Navbar />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-  <div className="p-4 border rounded-lg">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 mt-6">
+    <div className="p-4 border rounded-lg">
     <div className="text-sm text-gray-500">Total Leads</div>
     <div className="text-xl font-semibold">{totalLeads}</div>
-  </div>
+    </div>
 
-  <div className="p-4 border rounded-lg">
+   <div className="p-4 border rounded-lg">
     <div className="text-sm text-gray-500">Conversion Rate</div>
     <div className="text-xl font-semibold">{conversionRate}%</div>
-  </div>
+   </div>
 
-  <div className="p-4 border rounded-lg">
+   <div className="p-4 border rounded-lg">
     <div className="text-sm text-gray-500">This Week</div>
     <div className="text-xl font-semibold">{thisWeek}</div>
   </div>
 
-  <div className="p-4 border rounded-lg">
+   <div className="p-4 border rounded-lg">
     <div className="text-sm text-gray-500">Est. Revenue</div>
     <div className="text-xl font-semibold">
       ${totalRevenue.toLocaleString()}
