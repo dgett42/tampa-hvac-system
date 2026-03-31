@@ -13,6 +13,8 @@ export default function Navbar() {
         <Link href="/admin">Dashboard</Link>
         <Link href="/leads">Leads</Link>
         <Link href="/analytics">Analytics</Link>
+        <Link href="/settings">Settings</Link>
+        <Link href="/admin/logout" className="text-red-500">Logout</Link>
       </div>
     </nav>
   );
