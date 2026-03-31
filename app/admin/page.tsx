@@ -118,9 +118,8 @@ const statusSeries = [
 
 
   return (
-    <main className="p-6">
+    <main className="p-8">
       <Navbar />
-      <h1 className="text-2xl font-semibold mb-4">Admin Dashboard</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
   <div className="p-4 border rounded-lg">
