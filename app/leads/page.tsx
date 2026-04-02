@@ -87,7 +87,10 @@ export default function LeadsPage() {
   const [loading, setLoading] = useState(true);
 
   async function loadLeads() {
-    if (!supabase) return;
+    if (!supabase) {
+     console.error("Supabase client not ready");
+    return;
+        }
 
     setLoading(true);
 
