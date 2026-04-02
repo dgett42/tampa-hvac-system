@@ -171,7 +171,7 @@ export default function LeadsPage() {
   return (
     <main className="p-6 min-h-screen">
         <Navbar />
-      <div className="max-w-7xl m-auto">
+      <div className="max-w-7xl m-auto mt-7">
         <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-3xl font-semibold">Leads</h1>
