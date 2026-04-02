@@ -187,7 +187,7 @@ export default function AnalyticsPage() {
   return (
     <main className="p-6 min-h-screen">
         <Navbar />
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto m-6">
         <div className="mb-6">
           <h1 className="text-3xl font-semibold">Analytics</h1>
           <p className="text-sm text-gray-400 mt-1">
