@@ -5,14 +5,14 @@ import { getSupabase } from "@/lib/supabaseClient";
 
 type Lead = {
   id: string;
-  name: string | null;
-  phone: string | null;
-  email?: string | null;
-  issue: string | null;
-  status: string | null;
-  priority: string | null;
-  created_at: string | null;
-  revenue?: number | null;
+  name: string;
+  phone: string;
+  email: string | null;
+  status: string;
+  created_at: string;
+  priority: string;
+  issue: string;
+  revenue: number | null;
 };
 
 const STATUS_ORDER = ["new", "contacted", "booked", "closed", "lost"] as const;
@@ -23,7 +23,6 @@ function formatDate(date: string | null) {
   return new Date(date).toLocaleString("en-US", {
     dateStyle: "short",
     timeStyle: "short",
-    timeZoneName: "short",
   });
 }
 
