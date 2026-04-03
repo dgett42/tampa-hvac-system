@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from "react";
 import { getSupabase } from "@/lib/supabaseClient";
+import Navbar from "@/components/Navbar";
 
 import {
   ResponsiveContainer,
@@ -117,26 +118,26 @@ const statusSeries = [
 
 
   return (
-    <main className="p-6">
-      <h1 className="text-2xl font-semibold mb-4">Admin Dashboard</h1>
+    <main className="p-9 px-30">
+      <Navbar />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-  <div className="p-4 border rounded-lg">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 mt-6">
+    <div className="p-4 border rounded-lg">
     <div className="text-sm text-gray-500">Total Leads</div>
     <div className="text-xl font-semibold">{totalLeads}</div>
-  </div>
+    </div>
 
-  <div className="p-4 border rounded-lg">
+   <div className="p-4 border rounded-lg">
     <div className="text-sm text-gray-500">Conversion Rate</div>
     <div className="text-xl font-semibold">{conversionRate}%</div>
-  </div>
+   </div>
 
-  <div className="p-4 border rounded-lg">
+   <div className="p-4 border rounded-lg">
     <div className="text-sm text-gray-500">This Week</div>
     <div className="text-xl font-semibold">{thisWeek}</div>
   </div>
 
-  <div className="p-4 border rounded-lg">
+   <div className="p-4 border rounded-lg">
     <div className="text-sm text-gray-500">Est. Revenue</div>
     <div className="text-xl font-semibold">
       ${totalRevenue.toLocaleString()}
@@ -230,6 +231,8 @@ const statusSeries = [
 
     <p className="mt-2">{lead.issue}</p>
 
+    {/* Show revenue input if lead is closed */}
+    
     {lead.status === "closed" && (
   <div className="mt-2 flex gap-2">
     <input
