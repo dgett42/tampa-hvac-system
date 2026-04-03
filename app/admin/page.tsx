@@ -185,8 +185,8 @@ const statusSeries = [
 
       <div className="space-y-4">
         {leads.map((lead) => (
-  <div key={lead.id} className="border p-4 rounded-lg">
-    <div className="flex justify-between items-center">
+        <div key={lead.id} className="border p-4 rounded-lg">
+       <div className="flex justify-between items-center">
       <div>
         <div className="font-semibold">{lead.name}</div>
         <div>{lead.phone}</div>
