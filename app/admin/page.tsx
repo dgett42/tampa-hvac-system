@@ -118,7 +118,7 @@ const statusSeries = [
 
 
   return (
-    <main className="p-9 px-30">
+    <main className="p-6 min-h-screen">
       <Navbar />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 mt-6">
