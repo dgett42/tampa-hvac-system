@@ -118,7 +118,7 @@ const statusSeries = [
 
 
   return (
-    <main className="p-9 px-30">
+    <main className="p-6 min-h-screen">
       <Navbar />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 mt-6">
@@ -186,8 +186,8 @@ const statusSeries = [
 
       <div className="space-y-4">
         {leads.map((lead) => (
-  <div key={lead.id} className="border p-4 rounded-lg">
-    <div className="flex justify-between items-center">
+        <div key={lead.id} className="border p-4 rounded-lg">
+       <div className="flex justify-between items-center">
       <div>
         <div className="font-semibold">{lead.name}</div>
         <div>{lead.phone}</div>

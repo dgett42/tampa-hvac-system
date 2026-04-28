@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { getSupabase } from "@/lib/supabaseClient";
 import Navbar from "@/components/Navbar";
 
+// Admin implementing functions to update lead status, revenu, and priority // 
+
 type Lead = {
   id: string;
   name: string;
@@ -78,7 +80,12 @@ function statusClasses(status: string | null) {
   }
 }
 
+// Functions to update admin dashboard with new status, revenue, and priority //
+
 export default function LeadsPage() {
+
+  // Leads page search functions and load leads database. //
+  
   const supabase = getSupabase();
 
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -167,6 +174,8 @@ export default function LeadsPage() {
       )
     );
   }
+
+  // Admin page UI //
 
   return (
     <main className="p-6 min-h-screen">
