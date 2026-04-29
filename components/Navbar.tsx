@@ -1,8 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 
 export default function Navbar() {
+  const router = useRouter();
+  async function logout() {
+    await fetch("/api/logout", {
+      method: "post"
+    });
+    router.push("/login")
+  }
   return (
     <nav className="w-full border-b p-4 flex justify-between items-center">
       <div className="text-2xl font-semibold mb-4">
@@ -14,7 +23,12 @@ export default function Navbar() {
         <Link href="/leads">Leads</Link>
         <Link href="/analytics">Analytics</Link>
         <Link href="/settings">Settings</Link>
-        <Link href="/admin/logout" className="text-red-500">Logout</Link>
+        <button 
+            onClick={logout}
+            className="text-red-500"
+            >
+              Logout
+            </button>
       </div>
     </nav>
   );
