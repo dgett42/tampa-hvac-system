@@ -38,23 +38,23 @@ export default function LoginPage() {
         onSubmit={submit}
         className="w-full max-w-md rounded-2xl bg-white p-8 shadow"
       >
-        <h1 className="text-2xl font-bold mb-2">Admin Login</h1>
+        <h1 className="text-2xl font-bold mb-2 text-black-600">Admin Login</h1>
         <p className="text-sm text-slate-500 mb-6">
           Sign in to manage HVAC leads.
         </p>
 
-        <label className="block text-sm font-medium mb-1">Email</label>
+        <label className="block text-sm font-medium mb-1 text-slate-700">Email</label>
         <input
-          className="w-full rounded-lg border p-3 mb-4"
+          className="w-full rounded-lg border border-blue-500 p-3 mb-4 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
           type="email"
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <label className="block text-sm font-medium mb-1">Password</label>
+        <label className="block text-sm font-medium mb-1 text-slate-700">Password</label>
         <input
-          className="w-full rounded-lg border p-3 mb-6"
+          className="w-full rounded-lg border border-blue-500 p-3 mb-6 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
           type="password"
           autoComplete="current-password"
           value={password}
