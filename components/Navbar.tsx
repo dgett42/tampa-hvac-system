@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
 
 export default function Navbar() {
   const router = useRouter();
+  const supabase = createClient();
+
   async function logout() {
-    await fetch("/api/logout", {
-      method: "post"
-    });
+    await supabase.auth.signOut();
     router.push("/login")
+    router.refresh();
   }
   return (
     <nav className="w-full border-b p-4 flex justify-between items-center">
