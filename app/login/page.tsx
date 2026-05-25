@@ -13,9 +13,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   async function submit(e: React.FormEvent) {
-    console.log("Submitting login form with email:", email);
-    console.log("submitting user password:", password);
-    
     e.preventDefault();
     setLoading(true);
 
@@ -31,8 +28,8 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/admin");
     router.refresh();
+    router.push("/admin");
   }
 
   return (
