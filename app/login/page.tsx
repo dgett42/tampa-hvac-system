@@ -13,6 +13,9 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   async function submit(e: React.FormEvent) {
+    console.log("Submitting login form with email:", email);
+    console.log("submitting user password:", password);
+    
     e.preventDefault();
     setLoading(true);
 
@@ -62,6 +65,7 @@ export default function LoginPage() {
         />
 
         <button
+          type="submit"
           disabled={loading}
           className="w-full rounded-lg bg-black text-white p-3 font-medium cursor-pointer disabled:opacity-60"
         >
