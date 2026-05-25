@@ -14,6 +14,8 @@ export default function LoginPage() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+
+    console.log("Attempting login with email:", email);
     setLoading(true);
 
     const { error } = await supabase.auth.signInWithPassword({
@@ -28,8 +30,7 @@ export default function LoginPage() {
       return;
     }
 
-    router.refresh();
-    router.push("/admin");
+    window.location.href = "/admin";
   }
 
   return (
