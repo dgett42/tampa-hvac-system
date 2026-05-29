@@ -2,8 +2,12 @@
 
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
+import {createClient} from "@/utils/supabase/client";
+
 
 export default function SettingsPage() {
+  const supabase = createClient();
+
   const [businessName, setBusinessName] = useState("Tampa HVAC");
   const [phone, setPhone] = useState("(555) 123-4567");
   const [email, setEmail] = useState("info@tampahvac.com");
@@ -11,10 +15,45 @@ export default function SettingsPage() {
   const [defaultJobValue, setDefaultJobValue] = useState("450");
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [smsNotifications, setSmsNotifications] = useState(false);
+  
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordLoading , setPasswordLoading] = useState(false);
 
   function handleSave() {
     alert("Settings saved (for now this is just UI, not connected to Supabase yet).");
   }
+
+  async function handleUpdatePassword(e: React.FormEvent) {
+  e.preventDefault();
+
+  if (newPassword.length < 6) {
+    alert("Password must be at least 6 characters.");
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
+    alert("Passwords do not match.");
+    return;
+  }
+
+  setPasswordLoading(true);
+
+  const { error } = await supabase.auth.updateUser({
+    password: newPassword,
+  });
+
+  setPasswordLoading(false);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  alert("Password updated successfully.");
+  setNewPassword("");
+  setConfirmPassword("");
+}
 
   return (
     <main className="p-6 min-h-screen">
@@ -85,6 +124,44 @@ export default function SettingsPage() {
               </div>
             </div>
           </section>
+
+          
+          <section className="border rounded-xl p-5">
+               <h2 className="text-xl font-semibold mb-4">Account Security</h2>
+
+                <form onSubmit={handleUpdatePassword} className="max-w-sm">
+            <label className="block text-sm text-gray-400 mb-1">
+              New Password
+            </label>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="w-full rounded-lg border p-2 text-black bg-white mb-4"
+              autoComplete="new-password"
+            />
+
+            <label className="block text-sm text-gray-400 mb-1">
+              Confirm New Password
+            </label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full rounded-lg border p-2 text-black bg-white mb-4"
+              autoComplete="new-password"
+            />
+
+            <button
+              type="submit"
+              disabled={passwordLoading}
+              className="px-5 py-2 rounded-lg bg-black text-white font-medium cursor-pointer disabled:opacity-60"
+            >
+              {passwordLoading ? "Updating..." : "Update Password"}
+            </button>
+           </form>
+          </section>
+          
 
           <section className="border rounded-xl p-5">
             <h2 className="text-xl font-semibold mb-4">Revenue Defaults</h2>
