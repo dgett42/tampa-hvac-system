@@ -18,7 +18,6 @@ import {
   Bar,
   Legend
 } from "recharts";
-import { profile } from "console";
 
 export default function AdminPage() {
   const supabase = createClient();
@@ -40,7 +39,7 @@ export default function AdminPage() {
   const [revenueInputs, setRevenueInputs] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
 
-   async function loadLeads() {
+  async function loadLeads() {
   if (!supabase) {
     console.error("Supabase client not ready");
     return;
