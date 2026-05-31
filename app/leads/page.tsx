@@ -133,6 +133,7 @@ const { data, error } = await supabase
   .order("created_at", { ascending: false });
 }
 
+
   useEffect(() => {
     loadLeads();
   }, []);
