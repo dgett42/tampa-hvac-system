@@ -131,6 +131,7 @@ const { data, error } = await supabase
   .select("*")
   .eq("company_id", profile.company_id)
   .order("created_at", { ascending: false });
+}
 
   useEffect(() => {
     loadLeads();
@@ -334,5 +335,4 @@ const { data, error } = await supabase
       </div>
     </main>
   );
-}
 }
