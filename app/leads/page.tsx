@@ -104,35 +104,33 @@ export default function LeadsPage() {
     setLoading(true);
 
     const {
-      data: { user },
-    } = await supabase.auth.getUser();
+  data: { user },
+} = await supabase.auth.getUser();
 
-    if (!user) {
-      console.error("User not logged in:");
-      setLeads([]);
-      setLoading(false);
-      return;
-    }
+if (!user) {
+  setLeads([]);
+  setLoading(false);
+  return;
+}
 
-    const { data: profile, error: profileError } = await supabase 
-      .from("profiles")
-      .select("company_id")
-      .eq("user_id", user.id)
-      .single();
-    
-    if (profileError || !profile?.company_id) {
-      console.error("No company profile found:", profileError);
-      setLeads([]);
-      setLoading(false);
-      return;
-    } 
+const { data: profile, error: profileError } = await supabase
+  .from("profiles")
+  .select("company_id")
+  .eq("id", user.id)
+  .single();
 
-    const { data, error } = await supabase
-      .from("leads")
-      .select("*")
-      .eq("company_id", profile.company_id)
-      .order("created_at", { ascending: false });
-  }
+if (profileError || !profile?.company_id) {
+  console.error("No company profile found:", profileError);
+  setLeads([]);
+  setLoading(false);
+  return;
+}
+
+const { data, error } = await supabase
+  .from("leads")
+  .select("*")
+  .eq("company_id", profile.company_id)
+  .order("created_at", { ascending: false });
 
   useEffect(() => {
     loadLeads();
@@ -336,4 +334,5 @@ export default function LeadsPage() {
       </div>
     </main>
   );
+}
 }
