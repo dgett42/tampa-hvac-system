@@ -35,21 +35,43 @@ export default function AdminPage() {
 
   const [leads, setLeads] = useState<Lead[]>([]);
   const [revenueInputs, setRevenueInputs] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(true);
 
-  async function loadLeads() {
-  const { data, error } = await supabase
-    .from("leads")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    console.error("loadLeads error:", error);
+   async function loadLeads() {
+    if (!supabase) {
+     console.error("Supabase client not ready");
     return;
-  }
+        }
 
-  console.log("loaded leads:", data?.length);
-  setLeads(data ?? []);
-}
+    setLoading(true);
+
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      console.error("User not logged in:", userError);
+      setLeads([]);
+      setLoading(false);
+      return;
+    }
+
+    const { data, error } = await supabase 
+      .from("leads")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+    
+    if (error) {
+      console.error(" loadLeads error:", error);
+      setLoading(false);
+      return;
+    } 
+
+    setLeads((data as Lead[]) ?? []);
+    setLoading(false);
+  }
   useEffect(() => {
     loadLeads();
   }, []);

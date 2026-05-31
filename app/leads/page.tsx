@@ -102,16 +102,29 @@ export default function LeadsPage() {
 
     setLoading(true);
 
-    const { data, error } = await supabase
-      .from("leads")
-      .select("*")
-      .order("created_at", { ascending: false });
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
-    if (error) {
-      console.error("loadLeads error:", error);
+    if (userError || !user) {
+      console.error("User not logged in:", userError);
+      setLeads([]);
       setLoading(false);
       return;
     }
+
+    const { data, error } = await supabase 
+      .from("leads")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+    
+    if (error) {
+      console.error(" loadLeads error:", error);
+      setLoading(false);
+      return;
+    } 
 
     setLeads((data as Lead[]) ?? []);
     setLoading(false);

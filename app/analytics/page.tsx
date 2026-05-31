@@ -23,11 +23,13 @@ import {
   id: string;
   name: string;
   phone: string;
+  email: string | null;
   status: string;
   created_at: string;
   priority: string;
   issue: string;
   revenue: number | null;
+  user_id?: string; 
 };
 
 
@@ -70,25 +72,37 @@ export default function AnalyticsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
 
-  async function loadLeads() {
+   async function loadLeads() {
     if (!supabase) {
-      console.error("Supabase client not ready");
-      setLoading(false);
-      return;
-    }
+     console.error("Supabase client not ready");
+    return;
+        }
 
     setLoading(true);
 
-    const { data, error } = await supabase
-      .from("leads")
-      .select("*")
-      .order("created_at", { ascending: false });
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
-    if (error) {
-      console.error("loadLeads error:", error);
+    if (userError || !user) {
+      console.error("User not logged in:", userError);
+      setLeads([]);
       setLoading(false);
       return;
     }
+
+    const { data, error } = await supabase 
+      .from("leads")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+    
+    if (error) {
+      console.error(" loadLeads error:", error);
+      setLoading(false);
+      return;
+    } 
 
     setLeads((data as Lead[]) ?? []);
     setLoading(false);
