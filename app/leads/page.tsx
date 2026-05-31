@@ -105,11 +105,10 @@ export default function LeadsPage() {
 
     const {
       data: { user },
-      error: userError,
     } = await supabase.auth.getUser();
 
-    if (userError || !user) {
-      console.error("User not logged in:", userError);
+    if (!user) {
+      console.error("User not logged in:");
       setLeads([]);
       setLoading(false);
       return;
