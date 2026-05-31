@@ -30,6 +30,7 @@ import {
   issue: string;
   revenue: number | null;
   user_id?: string; 
+  company_id?: string;
 };
 
 

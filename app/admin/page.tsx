@@ -32,6 +32,8 @@ export default function AdminPage() {
   priority: string;
   issue: string;
   revenue: number | null;
+  user_id?: string;
+  company_id?: string;
 };
 
   const [leads, setLeads] = useState<Lead[]>([]);
