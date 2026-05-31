@@ -18,6 +18,7 @@ import {
   Bar,
   Legend
 } from "recharts";
+import { profile } from "console";
 
 export default function AdminPage() {
   const supabase = createClient();
@@ -57,20 +58,24 @@ export default function AdminPage() {
       return;
     }
 
-    const { data, error } = await supabase 
-      .from("leads")
-      .select("*")
+    const { data: profile, error: profileError } = await supabase 
+      .from("profiles")
+      .select("company_id")
       .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
+      .single();
     
-    if (error) {
-      console.error(" loadLeads error:", error);
+    if (profileError || !profile?.company_id) {
+      console.error("No company profile found:", profileError);
+      setLeads([]);
       setLoading(false);
       return;
     } 
 
-    setLeads((data as Lead[]) ?? []);
-    setLoading(false);
+    const { data, error } = await supabase
+      .from("leads")
+      .select("*")
+      .eq("company_id", profile.company_id)
+      .order("created_at", { ascending: false });
   }
   useEffect(() => {
     loadLeads();
