@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import {createClient} from "@/utils/supabase/client";
 
 
 export default function SettingsPage() {
   const supabase = createClient();
+  const [accountEmail, setAccountEmail] = useState<string | null>(null);
 
   const [businessName, setBusinessName] = useState("Tampa HVAC");
   const [phone, setPhone] = useState("(555) 123-4567");
@@ -19,6 +20,24 @@ export default function SettingsPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordLoading , setPasswordLoading] = useState(false);
+
+  useEffect(() => {
+  async function loadUser() {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error) {
+      console.error("Error loading user:", error);
+      return;
+    }
+
+    setAccountEmail(user?.email ?? null);
+  }
+
+  loadUser();
+}, [supabase]);
 
   function handleSave() {
     alert("Settings saved (for now this is just UI, not connected to Supabase yet).");
@@ -67,6 +86,19 @@ export default function SettingsPage() {
         </div>
 
         <div className="space-y-6">
+          <section className="border rounded-xl p-5">
+           <h2 className="text-xl font-semibold mb-4">Account</h2>
+            
+           <div>
+             <label className="block text-sm text-gray-400 mb-1">
+               Logged In As
+             </label>
+             <div className="w-full rounded-lg border p-2 text-black bg-white">
+               {accountEmail ?? "Loading account..."}
+             </div>
+           </div>
+          </section>
+          
           <section className="border rounded-xl p-5">
             <h2 className="text-xl font-semibold mb-4">Business Information</h2>
 
