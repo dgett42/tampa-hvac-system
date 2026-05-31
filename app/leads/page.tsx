@@ -16,6 +16,7 @@ type Lead = {
   priority: string;
   issue: string;
   revenue: number | null;
+  user_id?: string; 
 };
 
 const STATUS_ORDER = ["new", "contacted", "booked", "closed", "lost"] as const;
