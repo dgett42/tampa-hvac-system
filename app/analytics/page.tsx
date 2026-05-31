@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { getSupabase } from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/client";
 import Navbar from "@/components/Navbar";
 import {
   ResponsiveContainer,
@@ -65,7 +65,7 @@ function lastNDaysRevenue(n: number) {
 }
 
 export default function AnalyticsPage() {
-  const supabase = getSupabase();
+  const supabase = createClient();
 
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { getSupabase } from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/client";
 import Navbar from "@/components/Navbar";
 
 // Admin implementing functions to update lead status, revenu, and priority // 
@@ -86,7 +86,7 @@ export default function LeadsPage() {
 
   // Leads page search functions and load leads database. //
   
-  const supabase = getSupabase();
+  const supabase = createClient();
 
   const [leads, setLeads] = useState<Lead[]>([]);
   const [search, setSearch] = useState("");

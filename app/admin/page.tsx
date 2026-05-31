@@ -3,7 +3,7 @@
 export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from "react";
-import { getSupabase } from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/client";
 import Navbar from "@/components/Navbar";
 
 import {
@@ -20,7 +20,7 @@ import {
 } from "recharts";
 
 export default function AdminPage() {
-  const supabase = getSupabase();
+  const supabase = createClient();
 
   type Lead = {
   id: string;

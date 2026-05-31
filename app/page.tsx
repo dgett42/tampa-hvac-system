@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { getSupabase } from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Home() {
-  const supabase = getSupabase(); // will be null during SSR/build, real in browser
+  const supabase = createClient(); // will be null during SSR/build, real in browser
 
   const [form, setForm] = useState({
     name: "",
