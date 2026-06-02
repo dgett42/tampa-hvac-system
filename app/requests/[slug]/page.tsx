@@ -35,6 +35,10 @@ export default function PublicRequestPage() {
       }),
     });
 
+    const reponseText = await res.text();
+    console.log("status", res.status);
+    console.log("response", reponseText);
+
     setLoading(false);
 
     if (!res.ok) {
