@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+export async function GET() {
+  return Response.json({ ok: true, message: "public-leads route works" });
+}
+
 export async function POST(req: Request) {
   const body = await req.json();
 
