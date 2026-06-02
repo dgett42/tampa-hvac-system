@@ -27,7 +27,7 @@ export default function HomePage() {
           </Link>
 
           <Link
-            href="/request/tampa-hvac"
+            href="/request/slug"
             className="rounded-xl border p-6 hover:bg-slate-50 transition"
           >
             <h2 className="text-xl font-semibold text-slate-900 mb-2">
