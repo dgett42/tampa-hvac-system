@@ -20,6 +20,8 @@ export default function PublicRequestPage() {
 
     setLoading(true);
 
+    console.log("slug being sent:", slug);
+
     const res = await fetch("/api/public-leads", {
       method: "POST",
       headers: {
