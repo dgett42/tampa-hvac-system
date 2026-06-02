@@ -20,7 +20,7 @@ export default function PublicRequestPage() {
 
     setLoading(true);
 
-    const res = await fetch("/app/api/public-leads", {
+    const res = await fetch("api/public-leads", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
