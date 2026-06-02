@@ -5,13 +5,7 @@ export async function POST(req: Request) {
   const body = await req.json();
 
   const { slug, name, phone, email, issue, priority } = body;
-
-  if (!slug || !name || !phone || !issue) {
-    return NextResponse.json(
-      { error: "Missing required fields" },
-      { status: 400 }
-    );
-  }
+  const cleanSlug = String(slug).trim().toLowerCase();
 
   const supabaseAdmin = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -21,10 +15,15 @@ export async function POST(req: Request) {
   const { data: company, error: companyError } = await supabaseAdmin
     .from("companies")
     .select("id")
-    .eq("slug", slug)
+    .eq("slug", cleanSlug)
     .single();
 
   if (companyError || !company) {
+    console.error("Company lookup failed:", {
+      cleanSlug,
+      companyError,
+    });
+
     return NextResponse.json(
       { error: "Company not found" },
       { status: 404 }
