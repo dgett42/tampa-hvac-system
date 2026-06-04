@@ -6,7 +6,7 @@ export default function HomePage() {
       {/* Navbar */}
       <header className="border-b border-slate-800 bg-slate-950/80">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-          <Link href="/page.tsx" className="text-xl font-bold tracking-tight text-white">
+          <Link href="/app" className="text-xl font-bold tracking-tight text-white">
             ServiceWingman
           </Link>
 
@@ -16,7 +16,7 @@ export default function HomePage() {
             </Link>
 
             <Link href="/request-service" className="hover:text-white">
-              Request Service
+              Contact Us
             </Link>
 
             <Link href="/legaldocs/privacy-policy" className="hover:text-white">
@@ -49,7 +49,7 @@ export default function HomePage() {
 
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
             <Link
-              href="/admin"
+              href="/signup"
               className="rounded-lg bg-blue-500 px-6 py-3 text-center font-semibold text-white transition hover:bg-blue-400"
             >
               Get Started
