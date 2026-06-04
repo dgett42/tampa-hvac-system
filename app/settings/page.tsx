@@ -179,7 +179,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-100">
+    <main className="p-6 min-h-screen">
       <Navbar />
 
       <div className="mx-auto max-w-5xl p-6">
