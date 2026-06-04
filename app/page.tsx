@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbarb";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -5,29 +6,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-slate-950 text-slate-100">
       {/* Navbar */}
       <header className="border-b border-slate-800 bg-slate-950/80">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-          <Link href="/app" className="text-xl font-bold tracking-tight text-white">
-            ServiceWingman
-          </Link>
-
-          <nav className="flex items-center gap-6 text-sm text-slate-300">
-            <Link href="/admin" className="hover:text-white">
-              Admin Page
-            </Link>
-
-            <Link href="/request-service" className="hover:text-white">
-              Contact Us
-            </Link>
-
-            <Link href="/legaldocs/privacy-policy" className="hover:text-white">
-              Privacy Policy
-            </Link>
-
-            <Link href="/legaldocs/terms-and-conditions" className="hover:text-white">
-              Terms And Conditions
-            </Link>
-          </nav>
-        </div>
+        <Navbar />
       </header>
 
       {/* Hero */}
