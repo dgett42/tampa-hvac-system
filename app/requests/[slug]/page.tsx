@@ -14,6 +14,7 @@ export default function PublicRequestPage() {
   const [priority, setPriority] = useState("medium");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [smsConsent, setSmsConsent] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -129,6 +130,18 @@ export default function PublicRequestPage() {
           <option value="high">High</option>
           <option value="emergency">Emergency</option>
         </select>
+
+        <label className="flex items-start gap-2 text-sm text-slate-600">
+          <input
+            type="checkbox"
+            checked={smsConsent}
+            onChange={(e) => setSmsConsent(e.target.checked)}
+            className="mt-1"
+          />
+          <span>
+            I agree to be contacted by phone or text about my HVAC request.
+          </span>
+          </label>
 
         <button
           type="submit"
