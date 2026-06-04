@@ -4,10 +4,7 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
-      {/* Navbar */}
-      <header className="border-b border-slate-800 bg-slate-950/80">
-        <Navbar />
-      </header>
+      <Navbar />
 
       {/* Hero */}
       <section className="mx-auto max-w-6xl px-6 py-20">

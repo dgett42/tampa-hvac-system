@@ -1,8 +1,10 @@
+import Navbar from "@/components/Navbarb";
 import nextlink from "next";
 
 export default function TermsPage() {
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
+      <Navbar />
       <section className="mx-auto max-w-4xl px-6 py-16">
         <div className="mb-10">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-blue-400">

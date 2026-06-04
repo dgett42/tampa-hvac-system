@@ -1,33 +1,11 @@
 import Link from "next/link";
+import Navbar from "@/components/Navbarb";
 
 export default function FeaturesPage() {
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
-      {/* Navbar */}
       <header className="border-b border-slate-800 bg-slate-950/80">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-          <Link href="/" className="text-xl font-bold tracking-tight text-white">
-            ServiceWingman
-          </Link>
-
-          <nav className="flex items-center gap-6 text-sm text-slate-300">
-            <Link href="/" className="hover:text-white">
-              Home
-            </Link>
-
-            <Link href="/features" className="text-white">
-              Features
-            </Link>
-
-            <Link href="/privacy" className="hover:text-white">
-              Privacy Policy
-            </Link>
-
-            <Link href="/terms" className="hover:text-white">
-              Terms
-            </Link>
-          </nav>
-        </div>
+        <Navbar /> 
       </header>
 
       {/* Hero */}

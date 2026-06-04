@@ -18,11 +18,11 @@ export default function Navbar() {
           </Link>
 
           <Link href="/legaldocs/privacy-policy" className="transition hover:text-white">
-            Privacy
+            Privacy Policy
           </Link>
 
           <Link href="/legaldocs/terms-and-conditions" className="transition hover:text-white">
-            Terms
+            Terms and Conditions
           </Link>
         </nav>
       </div>
