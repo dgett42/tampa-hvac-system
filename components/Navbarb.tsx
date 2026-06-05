@@ -24,6 +24,10 @@ export default function Navbar() {
           <Link href="/legaldocs/terms-and-conditions" className="transition hover:text-white">
             Terms and Conditions
           </Link>
+
+          <Link href="/admin" className="transition hover:text-white">
+            Admin
+          </Link>
         </nav>
       </div>
     </header>
