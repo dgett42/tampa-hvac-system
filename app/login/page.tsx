@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
+import Navbar from "@/components/Navbarb";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -36,6 +37,7 @@ export default function LoginPage() {
 
   return (
   <main className="page-shell flex min-h-screen items-center justify-center px-4 py-10">
+    <Navbar />
     <form
       onSubmit={submit}
       className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900/90 p-8 shadow-2xl shadow-black/30"
