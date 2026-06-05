@@ -141,7 +141,7 @@ SMS/Phone consent: ${smsConsent ? "Yes" : "No"}
   }
 
   return (
-    <main className="min-h-screen bg-slate-100 px-4 py-10 text-slate-900">
+    <main className="page-shell px-4 py-10">
       <section className="mx-auto max-w-5xl">
         <div className="mb-6 rounded-3xl bg-slate-950 px-6 py-8 text-white shadow-xl md:px-10">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-blue-400">

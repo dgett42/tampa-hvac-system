@@ -35,7 +35,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-slate-100 px-4">
+    <main className="page-shell px-4 py-10">
       <form
         onSubmit={submit}
         className="w-full max-w-md rounded-2xl bg-white p-8 shadow"
