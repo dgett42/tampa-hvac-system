@@ -43,66 +43,87 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="page-shell flex min-h-screen items-center justify-center px-4 py-10">
-        <Navbar />
+  <main className="page-shell min-h-screen">
+    <Navbar />
+
+    <section className="flex min-h-[calc(100vh-80px)] items-center justify-center px-4 py-10">
       <form
         onSubmit={submit}
-        className="w-full max-w-md rounded-2xl bg-white p-8 shadow"
+        className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900/90 p-8 shadow-2xl shadow-black/30"
       >
-        <h1 className="text-2xl font-bold mb-2 text-black">Create Account</h1>
+        <div className="mb-8">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-blue-400">
+            ServiceWingman Admin
+          </p>
 
-        <p className="text-sm text-slate-500 mb-6">
-          Create an account to access the HVAC dashboard.
-        </p>
+          <h1 className="text-3xl font-bold tracking-tight text-white">
+            Create Account
+          </h1>
 
-        <label className="block text-sm font-medium mb-1 text-slate-700">
+          <p className="mt-3 text-sm leading-6 text-slate-400">
+            Create an account to access the HVAC dashboard and manage your
+            service leads.
+          </p>
+        </div>
+
+        <label className="mb-1.5 block text-sm font-medium text-slate-200">
           Email
         </label>
         <input
-          className="w-full rounded-lg border border-blue-500 p-3 mb-4 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mb-4 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-blue-400 focus:ring-4 focus:ring-blue-400/20"
           type="email"
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@example.com"
+          required
         />
 
-        <label className="block text-sm font-medium mb-1 text-slate-700">
+        <label className="mb-1.5 block text-sm font-medium text-slate-200">
           Password
         </label>
         <input
-          className="w-full rounded-lg border border-blue-500 p-3 mb-4 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mb-4 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-blue-400 focus:ring-4 focus:ring-blue-400/20"
           type="password"
           autoComplete="new-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          placeholder="Create a password"
+          required
         />
 
-        <label className="block text-sm font-medium mb-1 text-slate-700">
+        <label className="mb-1.5 block text-sm font-medium text-slate-200">
           Confirm Password
         </label>
         <input
-          className="w-full rounded-lg border border-blue-500 p-3 mb-6 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mb-6 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-blue-400 focus:ring-4 focus:ring-blue-400/20"
           type="password"
           autoComplete="new-password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="Confirm your password"
+          required
         />
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-black text-white p-3 font-medium cursor-pointer disabled:opacity-60"
+          className="w-full rounded-xl bg-blue-500 px-4 py-3 font-semibold text-white shadow-lg transition hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? "Creating account..." : "Create Account"}
         </button>
 
-        <p className="text-sm text-slate-500 mt-4 text-center">
+        <p className="mt-5 text-center text-sm text-slate-400">
           Already have an account?{" "}
-          <Link href="/login" className="text-blue-600 underline">
+          <Link
+            href="/login"
+            className="font-medium text-blue-400 hover:underline"
+          >
             Log in
           </Link>
         </p>
       </form>
-    </main>
-  );
+    </section>
+  </main>
+);
 }
