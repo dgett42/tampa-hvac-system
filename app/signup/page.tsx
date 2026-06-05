@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
+import Navbar from "@/components/Navbarb";
 
 export default function SignupPage() {
   const supabase = createClient();
@@ -42,7 +43,8 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="page-shell px-4 py-10">
+    <main className="page-shell flex min-h-screen items-center justify-center px-4 py-10">
+        <Navbar />
       <form
         onSubmit={submit}
         className="w-full max-w-md rounded-2xl bg-white p-8 shadow"
