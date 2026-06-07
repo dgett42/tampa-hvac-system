@@ -2,22 +2,9 @@
 
 export const dynamic = "force-dynamic";
 
-import { useEffect, useState } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { useEffect, useMemo, useState } from "react";
 import Navbar from "@/components/Navbar";
-
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  BarChart,
-  Bar,
-  Legend,
-} from "recharts";
+import { createClient } from "@/utils/supabase/client";
 
 type Lead = {
   id: string;
@@ -57,22 +44,24 @@ type Lead = {
   created_at: string;
 };
 
-type FormattedLeadSeries = {
-  date: string;
-  count: number;
-};
+const statusFilters = [
+  { label: "All", value: "all" },
+  { label: "New", value: "new" },
+  { label: "Contacted", value: "contacted" },
+  { label: "Booked", value: "booked" },
+  { label: "Closed", value: "closed" },
+  { label: "Lost", value: "lost" },
+];
 
-type StatusSeries = {
-  name: string;
-  value: number;
-};
-
-export default function AdminPage() {
+export default function LeadsPage() {
   const supabase = createClient();
 
   const [leads, setLeads] = useState<Lead[]>([]);
-  const [revenueInputs, setRevenueInputs] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [search, setSearch] = useState("");
+  const [expandedLeadId, setExpandedLeadId] = useState<string | null>(null);
+  const [revenueInputs, setRevenueInputs] = useState<Record<string, string>>({});
 
   async function loadLeads() {
     setLoading(true);
@@ -122,451 +111,383 @@ export default function AdminPage() {
     loadLeads();
   }, []);
 
-  const totalLeads = leads.length;
+  const filteredLeads = useMemo(() => {
+    return leads.filter((lead) => {
+      const matchesStatus =
+        statusFilter === "all" || lead.status === statusFilter;
 
-  const newCount = leads.filter((lead) => lead.status === "new").length;
-  const contacted = leads.filter((lead) => lead.status === "contacted").length;
-  const booked = leads.filter((lead) => lead.status === "booked").length;
-  const closed = leads.filter((lead) => lead.status === "closed").length;
-  const lost = leads.filter((lead) => lead.status === "lost").length;
+      const searchText = search.toLowerCase().trim();
 
-  const conversionRate =
-    totalLeads > 0 ? ((closed / totalLeads) * 100).toFixed(1) : "0";
+      const matchesSearch =
+        searchText === "" ||
+        lead.name?.toLowerCase().includes(searchText) ||
+        lead.phone?.toLowerCase().includes(searchText) ||
+        lead.email?.toLowerCase().includes(searchText) ||
+        lead.city?.toLowerCase().includes(searchText) ||
+        lead.service_type?.toLowerCase().includes(searchText) ||
+        lead.issue?.toLowerCase().includes(searchText);
 
-  const emergencyCount = leads.filter(
-    (lead) => lead.priority === "emergency"
-  ).length;
+      return matchesStatus && matchesSearch;
+    });
+  }, [leads, statusFilter, search]);
 
-  const emergencyPct =
-    totalLeads > 0 ? ((emergencyCount / totalLeads) * 100).toFixed(1) : "0";
+  async function updateStatus(leadId: string, status: string) {
+    const { error } = await supabase
+      .from("leads")
+      .update({ status })
+      .eq("id", leadId);
 
-  const bookedRate =
-    totalLeads > 0 ? ((booked / totalLeads) * 100).toFixed(1) : "0";
-
-  const closeRate = booked > 0 ? ((closed / booked) * 100).toFixed(1) : "0";
-
-  const now = new Date();
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(now.getDate() - 7);
-
-  const thisWeek = leads.filter((lead) => {
-    return new Date(lead.created_at) >= sevenDaysAgo;
-  }).length;
-
-  const totalRevenue = leads
-    .filter((lead) => lead.status === "closed")
-    .reduce((sum, lead) => sum + (lead.revenue || 0), 0);
-
-  const series = getLastNDays(7);
-
-  for (const lead of leads) {
-    const date = new Date(lead.created_at);
-    const day = `${String(date.getMonth() + 1).padStart(2, "0")}-${String(
-      date.getDate()
-    ).padStart(2, "0")}`;
-
-    const index = series.findIndex((item) => item.date === day);
-
-    if (index !== -1) {
-      series[index].count += 1;
+    if (error) {
+      console.error("Status update failed:", error);
+      alert(error.message);
+      return;
     }
+
+    loadLeads();
   }
 
-  const statusSeries: StatusSeries[] = [
-    { name: "New", value: newCount },
-    { name: "Contacted", value: contacted },
-    { name: "Booked", value: booked },
-    { name: "Closed", value: closed },
-    { name: "Lost", value: lost },
-  ];
+  async function saveRevenue(leadId: string) {
+    const raw = revenueInputs[leadId] ?? "";
+    const value = Number(raw);
+
+    if (raw.trim() === "" || Number.isNaN(value)) {
+      alert("Enter a valid revenue amount");
+      return;
+    }
+
+    const { error } = await supabase
+      .from("leads")
+      .update({ revenue: value })
+      .eq("id", leadId);
+
+    if (error) {
+      console.error("Revenue update failed:", error);
+      alert(error.message);
+      return;
+    }
+
+    loadLeads();
+  }
 
   return (
     <main className="page-shell min-h-screen">
       <Navbar />
 
       <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mb-6 flex flex-col gap-4 rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-2xl shadow-black/20 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-blue-400">
-              ServiceWingman Admin
-            </p>
+        <div className="mb-6 rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-2xl shadow-black/20">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-blue-400">
+                Lead Management
+              </p>
 
-            <h1 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
-              Dashboard
-            </h1>
+              <h1 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
+                Leads
+              </h1>
 
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400 md:text-base">
-              Track incoming HVAC requests, monitor lead status, and manage
-              follow-up from one clean dashboard.
-            </p>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400 md:text-base">
+                Review customer requests, update lead status, and track each
+                opportunity from new submission to booked or closed.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={loadLeads}
+              disabled={loading}
+              className="w-full rounded-xl border border-slate-700 px-4 py-3 text-sm font-semibold text-slate-200 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60 md:w-auto"
+            >
+              {loading ? "Refreshing..." : "Refresh Leads"}
+            </button>
           </div>
-
-          <button
-            type="button"
-            onClick={loadLeads}
-            disabled={loading}
-            className="w-full rounded-xl border border-slate-700 px-4 py-3 text-sm font-semibold text-slate-200 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60 md:w-auto"
-          >
-            {loading ? "Refreshing..." : "Refresh"}
-          </button>
         </div>
 
-        <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <StatCard label="Total Leads" value={totalLeads.toString()} />
-          <StatCard label="Conversion Rate" value={`${conversionRate}%`} />
-          <StatCard label="This Week" value={thisWeek.toString()} />
-          <StatCard
-            label="Est. Revenue"
-            value={`$${totalRevenue.toLocaleString()}`}
-          />
-        </div>
+        <div className="mb-6 rounded-3xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl shadow-black/20">
+          <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div>
+              <label className="mb-2 block text-sm font-medium text-slate-300">
+                Search leads
+              </label>
 
-        <div className="mb-6 grid gap-6 xl:grid-cols-2">
-          <ChartCard
-            title="Leads Last 7 Days"
-            description="Daily lead volume from recent form submissions."
-          >
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={series}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="date" stroke="#94a3b8" fontSize={12} />
-                <YAxis allowDecimals={false} stroke="#94a3b8" fontSize={12} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: "12px",
-                    color: "#f8fafc",
-                  }}
-                  labelStyle={{ color: "#f8fafc" }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="count"
-                  stroke="#3b82f6"
-                  strokeWidth={3}
-                  dot={{ r: 4 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </ChartCard>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search by name, phone, email, city, service, or issue..."
+                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none placeholder:text-slate-500 focus:border-blue-400 focus:ring-4 focus:ring-blue-400/20"
+              />
+            </div>
 
-          <ChartCard
-            title="Pipeline Breakdown"
-            description="Current lead count by pipeline stage."
-          >
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={statusSeries}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} />
-                <YAxis allowDecimals={false} stroke="#94a3b8" fontSize={12} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: "12px",
-                    color: "#f8fafc",
-                  }}
-                  labelStyle={{ color: "#f8fafc" }}
-                />
-                <Legend />
-                <Bar dataKey="value" fill="#3b82f6" radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </ChartCard>
-        </div>
-
-        <div className="mb-6 grid gap-3 text-sm text-slate-400 sm:grid-cols-3">
-          <MiniMetric label="Booked Rate" value={`${bookedRate}%`} />
-          <MiniMetric label="Close Rate" value={`${closeRate}%`} />
-          <MiniMetric label="Emergency Leads" value={`${emergencyPct}%`} />
+            <div className="flex flex-wrap gap-2 lg:justify-end">
+              {statusFilters.map((filter) => (
+                <button
+                  key={filter.value}
+                  type="button"
+                  onClick={() => setStatusFilter(filter.value)}
+                  className={`w-fit rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                    statusFilter === filter.value
+                      ? "border-blue-500 bg-blue-500 text-white"
+                      : "border-slate-700 bg-slate-950 text-slate-300 hover:bg-slate-800"
+                  }`}
+                >
+                  {filter.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl shadow-black/20">
           <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-xl font-semibold text-white">
-                Recent Leads
+                Lead Inbox
               </h2>
 
               <p className="mt-1 text-sm text-slate-400">
-                Review service requests and update each lead as it moves through
-                the pipeline.
+                Showing {filteredLeads.length} of {leads.length} leads.
               </p>
             </div>
-
-            <span className="w-fit rounded-full border border-slate-700 bg-slate-950 px-3 py-1 text-sm text-slate-300">
-              {totalLeads} total
-            </span>
           </div>
 
           {loading ? (
-            <div className="rounded-2xl border border-slate-800 bg-slate-950 p-6 text-center text-slate-400">
+            <div className="rounded-2xl border border-slate-800 bg-slate-950 p-8 text-center text-slate-400">
               Loading leads...
             </div>
-          ) : leads.length === 0 ? (
+          ) : filteredLeads.length === 0 ? (
             <div className="rounded-2xl border border-slate-800 bg-slate-950 p-8 text-center">
-              <p className="font-medium text-white">No leads yet</p>
-
+              <p className="font-medium text-white">No matching leads</p>
               <p className="mt-2 text-sm text-slate-400">
-                New HVAC requests will appear here once customers submit the
-                public service form.
+                Try changing your search or status filter.
               </p>
             </div>
           ) : (
             <div className="space-y-4">
-              {leads.map((lead) => (
-                <LeadCard
-                  key={lead.id}
-                  lead={lead}
-                  revenueInput={
-                    revenueInputs[lead.id] ?? lead.revenue?.toString() ?? ""
-                  }
-                  setRevenueInput={(value) => {
-                    setRevenueInputs((prev) => ({
-                      ...prev,
-                      [lead.id]: value,
-                    }));
-                  }}
-                  onStatusChange={async (status) => {
-                    const { error } = await supabase
-                      .from("leads")
-                      .update({ status })
-                      .eq("id", lead.id);
+              {filteredLeads.map((lead) => {
+                const expanded = expandedLeadId === lead.id;
 
-                    if (error) {
-                      console.error("Status update failed:", error);
-                      alert(error.message);
-                      return;
-                    }
+                return (
+                  <div
+                    key={lead.id}
+                    className="rounded-2xl border border-slate-800 bg-slate-950 p-4"
+                  >
+                    <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h3 className="text-lg font-semibold text-white">
+                            {lead.name}
+                          </h3>
 
-                    loadLeads();
-                  }}
-                  onRevenueSave={async () => {
-                    const raw = revenueInputs[lead.id] ?? "";
-                    const value = Number(raw);
+                          <span
+                            className={`rounded-full border px-2.5 py-1 text-xs font-medium ${getPriorityClass(
+                              lead.priority
+                            )}`}
+                          >
+                            {formatValue(lead.priority)}
+                          </span>
 
-                    if (raw.trim() === "" || Number.isNaN(value)) {
-                      alert("Enter a valid revenue amount");
-                      return;
-                    }
+                          {lead.service_type && (
+                            <span className="rounded-full border border-blue-500/30 bg-blue-500/10 px-2.5 py-1 text-xs font-medium text-blue-300">
+                              {lead.service_type}
+                            </span>
+                          )}
+                        </div>
 
-                    const { error } = await supabase
-                      .from("leads")
-                      .update({ revenue: value })
-                      .eq("id", lead.id);
+                        <div className="mt-3 grid gap-2 text-sm text-slate-400 sm:grid-cols-2 xl:grid-cols-4">
+                          <span>Phone: {formatValue(lead.phone)}</span>
+                          <span>Email: {formatValue(lead.email)}</span>
+                          <span>
+                            Location:{" "}
+                            {lead.city || lead.state
+                              ? `${lead.city || ""}${
+                                  lead.city && lead.state ? ", " : ""
+                                }${lead.state || ""}`
+                              : "Not provided"}
+                          </span>
+                          <span>
+                            Submitted:{" "}
+                            {new Date(lead.created_at).toLocaleString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </span>
+                        </div>
+                      </div>
 
-                    if (error) {
-                      console.error("Revenue update failed:", error);
-                      alert(error.message);
-                      return;
-                    }
+                      <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+                        <select
+                          value={lead.status}
+                          onChange={(e) =>
+                            updateStatus(lead.id, e.target.value)
+                          }
+                          className={`w-full rounded-xl border px-3 py-2 text-sm font-medium outline-none sm:w-auto ${getStatusClass(
+                            lead.status
+                          )}`}
+                        >
+                          <option value="new">New</option>
+                          <option value="contacted">Contacted</option>
+                          <option value="booked">Booked</option>
+                          <option value="closed">Closed</option>
+                          <option value="lost">Lost</option>
+                        </select>
 
-                    loadLeads();
-                  }}
-                />
-              ))}
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setExpandedLeadId(expanded ? null : lead.id)
+                          }
+                          className="w-full rounded-xl border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:bg-slate-800 sm:w-auto"
+                        >
+                          {expanded ? "Hide Details" : "View Details"}
+                        </button>
+                      </div>
+                    </div>
+
+                    {expanded && (
+                      <div className="mt-5 border-t border-slate-800 pt-5">
+                        <div className="grid gap-4 lg:grid-cols-3">
+                          <InfoPanel title="Contact">
+                            <InfoRow label="Name" value={lead.name} />
+                            <InfoRow label="Phone" value={lead.phone} />
+                            <InfoRow label="Email" value={lead.email} />
+                            <InfoRow
+                              label="SMS Consent"
+                              value={lead.sms_consent ? "Yes" : "No"}
+                            />
+                          </InfoPanel>
+
+                          <InfoPanel title="Service Address">
+                            <InfoRow
+                              label="Street"
+                              value={lead.street_address}
+                            />
+                            <InfoRow label="City" value={lead.city} />
+                            <InfoRow label="State" value={lead.state} />
+                            <InfoRow label="ZIP" value={lead.zip_code} />
+                            <InfoRow
+                              label="Property"
+                              value={lead.property_type}
+                            />
+                          </InfoPanel>
+
+                          <InfoPanel title="Request">
+                            <InfoRow
+                              label="Service"
+                              value={lead.service_type}
+                            />
+                            <InfoRow label="Priority" value={lead.priority} />
+                            <InfoRow
+                              label="Preferred Date"
+                              value={lead.preferred_date}
+                            />
+                            <InfoRow
+                              label="Preferred Time"
+                              value={lead.preferred_time}
+                            />
+                            <InfoRow
+                              label="Authorized"
+                              value={lead.authorized ? "Yes" : "No"}
+                            />
+                          </InfoPanel>
+
+                          <InfoPanel title="System Details">
+                            <InfoRow
+                              label="System Type"
+                              value={lead.system_type}
+                            />
+                            <InfoRow
+                              label="System Age"
+                              value={lead.system_age}
+                            />
+                            <InfoRow label="Brand" value={lead.system_brand} />
+                            <InfoRow
+                              label="Maintenance"
+                              value={lead.last_maintenance}
+                            />
+                            <InfoRow
+                              label="Indoor Temp"
+                              value={lead.current_temp}
+                            />
+                          </InfoPanel>
+
+                          <InfoPanel title="Issue Details">
+                            <InfoRow
+                              label="Issue Started"
+                              value={lead.issue_started}
+                            />
+                            <InfoRow label="Status" value={lead.status} />
+                            <InfoRow
+                              label="Revenue"
+                              value={
+                                lead.revenue
+                                  ? `$${lead.revenue.toLocaleString()}`
+                                  : null
+                              }
+                            />
+                          </InfoPanel>
+                        </div>
+
+                        <div className="mt-4 rounded-xl border border-slate-800 bg-slate-900 p-4">
+                          <h4 className="mb-2 text-sm font-semibold text-white">
+                            Issue Description
+                          </h4>
+                          <p className="whitespace-pre-wrap text-sm leading-6 text-slate-300">
+                            {lead.issue || "No issue description provided."}
+                          </p>
+                        </div>
+
+                        {lead.access_notes && (
+                          <div className="mt-4 rounded-xl border border-slate-800 bg-slate-900 p-4">
+                            <h4 className="mb-2 text-sm font-semibold text-white">
+                              Access Notes
+                            </h4>
+                            <p className="whitespace-pre-wrap text-sm leading-6 text-slate-300">
+                              {lead.access_notes}
+                            </p>
+                          </div>
+                        )}
+
+                        {lead.status === "closed" && (
+                          <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+                            <input
+                              type="text"
+                              inputMode="decimal"
+                              placeholder="Enter revenue"
+                              className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-slate-100 outline-none placeholder:text-slate-500 focus:border-blue-400 focus:ring-4 focus:ring-blue-400/20"
+                              value={
+                                revenueInputs[lead.id] ??
+                                lead.revenue?.toString() ??
+                                ""
+                              }
+                              onChange={(e) => {
+                                setRevenueInputs((prev) => ({
+                                  ...prev,
+                                  [lead.id]: e.target.value,
+                                }));
+                              }}
+                            />
+
+                            <button
+                              type="button"
+                              onClick={() => saveRevenue(lead.id)}
+                              className="rounded-xl bg-blue-500 px-5 py-3 font-semibold text-white transition hover:bg-blue-400 sm:w-auto"
+                            >
+                              Save Revenue
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
       </section>
     </main>
-  );
-}
-
-function LeadCard({
-  lead,
-  revenueInput,
-  setRevenueInput,
-  onStatusChange,
-  onRevenueSave,
-}: {
-  lead: Lead;
-  revenueInput: string;
-  setRevenueInput: (value: string) => void;
-  onStatusChange: (status: string) => void;
-  onRevenueSave: () => void;
-}) {
-  return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
-      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <h3 className="truncate text-lg font-semibold text-white">
-              {lead.name}
-            </h3>
-
-            <span
-              className={`rounded-full border px-2.5 py-1 text-xs font-medium ${getPriorityClass(
-                lead.priority
-              )}`}
-            >
-              {formatValue(lead.priority)}
-            </span>
-
-            {lead.service_type && (
-              <span className="rounded-full border border-blue-500/30 bg-blue-500/10 px-2.5 py-1 text-xs font-medium text-blue-300">
-                {lead.service_type}
-              </span>
-            )}
-          </div>
-
-          <div className="mt-2 grid gap-1 text-sm text-slate-400 sm:grid-cols-2">
-            <span>Phone: {formatValue(lead.phone)}</span>
-            <span>Email: {formatValue(lead.email)}</span>
-            <span>
-              Submitted:{" "}
-              {new Date(lead.created_at).toLocaleString("en-US", {
-                month: "short",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </span>
-            <span>
-              Preferred:{" "}
-              {lead.preferred_date || lead.preferred_time
-                ? `${lead.preferred_date || "No date"} ${
-                    lead.preferred_time || ""
-                  }`
-                : "Not provided"}
-            </span>
-          </div>
-        </div>
-
-        <select
-          value={lead.status}
-          onChange={(e) => onStatusChange(e.target.value)}
-          className={`w-full rounded-xl border px-3 py-2 text-sm font-medium outline-none md:w-auto ${getStatusClass(
-            lead.status
-          )}`}
-        >
-          <option value="new">New</option>
-          <option value="contacted">Contacted</option>
-          <option value="booked">Booked</option>
-          <option value="closed">Closed</option>
-          <option value="lost">Lost</option>
-        </select>
-      </div>
-
-      <div className="mt-5 grid gap-4 lg:grid-cols-3">
-        <InfoPanel title="Service Address">
-          <InfoRow label="Street" value={lead.street_address} />
-          <InfoRow label="City" value={lead.city} />
-          <InfoRow label="State" value={lead.state} />
-          <InfoRow label="ZIP" value={lead.zip_code} />
-          <InfoRow label="Property" value={lead.property_type} />
-        </InfoPanel>
-
-        <InfoPanel title="System Details">
-          <InfoRow label="System Type" value={lead.system_type} />
-          <InfoRow label="System Age" value={lead.system_age} />
-          <InfoRow label="Brand" value={lead.system_brand} />
-          <InfoRow label="Maintenance" value={lead.last_maintenance} />
-          <InfoRow label="Indoor Temp" value={lead.current_temp} />
-        </InfoPanel>
-
-        <InfoPanel title="Request Details">
-          <InfoRow label="Issue Started" value={lead.issue_started} />
-          <InfoRow label="Priority" value={lead.priority} />
-          <InfoRow
-            label="SMS Consent"
-            value={lead.sms_consent ? "Yes" : "No"}
-          />
-          <InfoRow
-            label="Authorized"
-            value={lead.authorized ? "Yes" : "No"}
-          />
-        </InfoPanel>
-      </div>
-
-      <div className="mt-4 rounded-xl border border-slate-800 bg-slate-900 p-4">
-        <h4 className="mb-2 text-sm font-semibold text-white">
-          Issue Description
-        </h4>
-
-        <p className="max-h-48 overflow-y-auto whitespace-pre-wrap text-sm leading-6 text-slate-300">
-          {lead.issue || "No issue description provided."}
-        </p>
-      </div>
-
-      {lead.access_notes && (
-        <div className="mt-4 rounded-xl border border-slate-800 bg-slate-900 p-4">
-          <h4 className="mb-2 text-sm font-semibold text-white">
-            Access Notes
-          </h4>
-
-          <p className="whitespace-pre-wrap text-sm leading-6 text-slate-300">
-            {lead.access_notes}
-          </p>
-        </div>
-      )}
-
-      {lead.status === "closed" && (
-        <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-          <input
-            type="text"
-            inputMode="decimal"
-            placeholder="Enter revenue"
-            className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-slate-100 outline-none placeholder:text-slate-500 focus:border-blue-400 focus:ring-4 focus:ring-blue-400/20"
-            value={revenueInput}
-            onChange={(e) => setRevenueInput(e.target.value)}
-          />
-
-          <button
-            type="button"
-            className="rounded-xl bg-blue-500 px-5 py-3 font-semibold text-white transition hover:bg-blue-400 sm:w-auto"
-            onClick={onRevenueSave}
-          >
-            Save
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function StatCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl shadow-black/20">
-      <p className="text-sm font-medium text-slate-400">{label}</p>
-
-      <p className="mt-2 text-3xl font-bold tracking-tight text-white">
-        {value}
-      </p>
-    </div>
-  );
-}
-
-function ChartCard({
-  title,
-  description,
-  children,
-}: {
-  title: string;
-  description: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl shadow-black/20">
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold text-white">{title}</h2>
-
-        <p className="mt-1 text-sm text-slate-400">{description}</p>
-      </div>
-
-      <div className="h-64 w-full">{children}</div>
-    </div>
-  );
-}
-
-function MiniMetric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-4">
-      <p className="text-slate-500">{label}</p>
-
-      <p className="mt-1 text-lg font-semibold text-white">{value}</p>
-    </div>
   );
 }
 
@@ -580,7 +501,6 @@ function InfoPanel({
   return (
     <div className="rounded-xl border border-slate-800 bg-slate-900 p-4">
       <h4 className="mb-3 text-sm font-semibold text-white">{title}</h4>
-
       <div className="space-y-2">{children}</div>
     </div>
   );
@@ -596,31 +516,11 @@ function InfoRow({
   return (
     <div className="flex justify-between gap-4 text-sm">
       <span className="text-slate-500">{label}</span>
-
       <span className="text-right font-medium text-slate-300">
         {formatValue(value)}
       </span>
     </div>
   );
-}
-
-function getLastNDays(n: number): FormattedLeadSeries[] {
-  const out: FormattedLeadSeries[] = [];
-  const now = new Date();
-
-  for (let i = n; i >= 0; i--) {
-    const date = new Date(now);
-    date.setDate(now.getDate() - i);
-
-    const key = date.toISOString().slice(0, 10);
-
-    out.push({
-      date: key.slice(5),
-      count: 0,
-    });
-  }
-
-  return out;
 }
 
 function getStatusClass(status: string) {
