@@ -219,10 +219,7 @@ nav a {
 
   input,
   textarea,
-  select {
-    width: 100%;
-  }
-  
+  select,
   button {
     width: 100%;
   }
