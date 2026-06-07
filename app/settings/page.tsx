@@ -179,253 +179,389 @@ export default function SettingsPage() {
   }
 
   return (
-    <main className="p-6 min-h-screen">
+    <main className="page-shell min-h-screen">
       <Navbar />
 
-      <div className="mx-auto max-w-5xl p-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-slate-900">Settings</h1>
-          <p className="text-slate-500">
-            Manage your company profile, public request form, notifications, and account security.
+      <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mb-6 rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-2xl shadow-black/20">
+          <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-blue-400">
+            ServiceWingman Admin
+          </p>
+
+          <h1 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
+            Settings
+          </h1>
+
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400 md:text-base">
+            Manage your business profile, public request form link,
+            notifications, and account security.
           </p>
         </div>
 
         {loading ? (
-          <div className="rounded-2xl bg-white p-6 shadow text-slate-600">
+          <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-8 text-center text-slate-400 shadow-xl shadow-black/20">
             Loading settings...
           </div>
         ) : (
           <div className="grid gap-6 lg:grid-cols-3">
-            <section className="lg:col-span-2 space-y-6">
+            <section className="space-y-6 lg:col-span-2">
               <form
                 onSubmit={saveCompanySettings}
-                className="rounded-2xl bg-white p-6 shadow"
+                className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-black/20"
               >
-                <h2 className="text-xl font-semibold text-slate-900 mb-1">
-                  Business Profile
-                </h2>
-                <p className="text-sm text-slate-500 mb-6">
-                  This information controls how your company appears inside the dashboard.
-                </p>
+                <SectionHeader
+                  title="Business Profile"
+                  description="Update the company information used across your dashboard and lead forms."
+                />
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Business Name
-                    </label>
-                    <input
-                      className="w-full rounded-lg border p-3 text-slate-900"
-                      value={businessName}
-                      onChange={(e) => setBusinessName(e.target.value)}
-                    />
-                  </div>
+                  <TextInput
+                    label="Business Name"
+                    value={businessName}
+                    onChange={setBusinessName}
+                    placeholder="Example HVAC Company"
+                  />
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Company Slug
-                    </label>
-                    <input
-                      className="w-full rounded-lg border p-3 text-slate-500 bg-slate-100"
-                      value={slug}
-                      disabled
-                    />
-                    <p className="text-xs text-slate-400 mt-1">
-                      Used in your public request form URL.
-                    </p>
-                  </div>
+                  <TextInput
+                    label="Company Slug"
+                    value={slug}
+                    onChange={setSlug}
+                    disabled
+                    helper="Used in your public request form URL."
+                  />
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Business Phone
-                    </label>
-                    <input
-                      className="w-full rounded-lg border p-3 text-slate-900"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                    />
-                  </div>
+                  <TextInput
+                    label="Business Phone"
+                    value={phone}
+                    onChange={setPhone}
+                    placeholder="(555) 123-4567"
+                    type="tel"
+                  />
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Business Email
-                    </label>
-                    <input
-                      className="w-full rounded-lg border p-3 text-slate-900"
-                      type="email"
-                      value={businessEmail}
-                      onChange={(e) => setBusinessEmail(e.target.value)}
-                    />
-                  </div>
+                  <TextInput
+                    label="Business Email"
+                    value={businessEmail}
+                    onChange={setBusinessEmail}
+                    placeholder="office@example.com"
+                    type="email"
+                  />
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Time Zone
-                    </label>
-                    <select
-                      className="w-full rounded-lg border p-3 text-slate-900"
-                      value={timezone}
-                      onChange={(e) => setTimezone(e.target.value)}
-                    >
-                      <option value="America/New_York">Eastern Time</option>
-                      <option value="America/Chicago">Central Time</option>
-                      <option value="America/Denver">Mountain Time</option>
-                      <option value="America/Los_Angeles">Pacific Time</option>
-                    </select>
-                  </div>
+                  <SelectInput
+                    label="Time Zone"
+                    value={timezone}
+                    onChange={setTimezone}
+                  >
+                    <option value="America/New_York">Eastern Time</option>
+                    <option value="America/Chicago">Central Time</option>
+                    <option value="America/Denver">Mountain Time</option>
+                    <option value="America/Los_Angeles">Pacific Time</option>
+                  </SelectInput>
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Default Job Value
-                    </label>
-                    <input
-                      className="w-full rounded-lg border p-3 text-slate-900"
-                      type="number"
-                      value={defaultJobValue}
-                      onChange={(e) => setDefaultJobValue(e.target.value)}
-                    />
-                  </div>
+                  <TextInput
+                    label="Default Job Value"
+                    value={defaultJobValue}
+                    onChange={setDefaultJobValue}
+                    type="number"
+                    placeholder="450"
+                    helper="Used as a planning estimate for job value."
+                  />
                 </div>
 
-                <div className="mt-6 border-t pt-5">
-                  <h3 className="text-lg font-semibold text-slate-900 mb-3">
+                <div className="mt-6 border-t border-slate-800 pt-6">
+                  <h3 className="text-lg font-semibold text-white">
                     Notifications
                   </h3>
 
-                  <div className="space-y-3">
-                    <label className="flex items-center justify-between rounded-lg border p-4">
-                      <div>
-                        <div className="font-medium text-slate-900">
-                          Email Notifications
-                        </div>
-                        <div className="text-sm text-slate-500">
-                          Receive alerts when new leads come in.
-                        </div>
-                      </div>
-                      <input
-                        type="checkbox"
-                        checked={emailNotifications}
-                        onChange={(e) => setEmailNotifications(e.target.checked)}
-                        className="h-5 w-5"
-                      />
-                    </label>
+                  <p className="mt-1 text-sm text-slate-400">
+                    Control how your company receives lead alerts.
+                  </p>
 
-                    <label className="flex items-center justify-between rounded-lg border p-4">
-                      <div>
-                        <div className="font-medium text-slate-900">
-                          SMS Notifications
-                        </div>
-                        <div className="text-sm text-slate-500">
-                          Future option for text alerts on urgent leads.
-                        </div>
-                      </div>
-                      <input
-                        type="checkbox"
-                        checked={smsNotifications}
-                        onChange={(e) => setSmsNotifications(e.target.checked)}
-                        className="h-5 w-5"
-                      />
-                    </label>
+                  <div className="mt-4 space-y-3">
+                    <ToggleRow
+                      title="Email Notifications"
+                      description="Receive alerts when new leads come in."
+                      checked={emailNotifications}
+                      onChange={setEmailNotifications}
+                    />
+
+                    <ToggleRow
+                      title="SMS Notifications"
+                      description="Enable text alerts for urgent or new leads when SMS is configured."
+                      checked={smsNotifications}
+                      onChange={setSmsNotifications}
+                    />
                   </div>
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={savingCompany}
-                  className="mt-6 rounded-lg bg-black px-5 py-3 text-white font-medium cursor-pointer disabled:opacity-60"
-                >
-                  {savingCompany ? "Saving..." : "Save Company Settings"}
-                </button>
+                <div className="mt-6 flex flex-col gap-3 border-t border-slate-800 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-sm text-slate-500">
+                    Changes apply to this company account.
+                  </p>
+
+                  <button
+                    type="submit"
+                    disabled={savingCompany}
+                    className="w-full rounded-xl bg-blue-500 px-5 py-3 font-semibold text-white transition hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                  >
+                    {savingCompany ? "Saving..." : "Save Settings"}
+                  </button>
+                </div>
               </form>
 
-              <section className="rounded-2xl bg-white p-6 shadow">
-                <h2 className="text-xl font-semibold text-slate-900 mb-1">
-                  Public Request Form
-                </h2>
-                <p className="text-sm text-slate-500 mb-4">
-                  Share this link with customers so new requests are tied to your company.
-                </p>
+              <section className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+                <SectionHeader
+                  title="Public Request Form"
+                  description="Share this link with customers so new HVAC requests are tied to your company."
+                />
 
                 <div className="flex flex-col gap-3 sm:flex-row">
                   <input
-                    className="flex-1 rounded-lg border p-3 text-slate-900 bg-slate-50"
+                    className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none placeholder:text-slate-500 focus:border-blue-400 focus:ring-4 focus:ring-blue-400/20"
                     value={publicRequestUrl}
                     readOnly
                   />
+
                   <button
                     type="button"
                     onClick={copyRequestLink}
-                    className="rounded-lg bg-blue-600 px-5 py-3 text-white font-medium cursor-pointer hover:bg-blue-700 transition"
+                    className="w-full rounded-xl bg-blue-500 px-5 py-3 font-semibold text-white transition hover:bg-blue-400 sm:w-auto"
                   >
                     Copy Link
                   </button>
+                </div>
+
+                <div className="mt-4 rounded-2xl border border-slate-800 bg-slate-950 p-4">
+                  <p className="text-sm font-medium text-white">
+                    Customer-facing URL
+                  </p>
+
+                  <p className="mt-1 text-sm leading-6 text-slate-400">
+                    Customers can submit HVAC requests through this public form.
+                    Submissions appear in your Leads page and dashboard.
+                  </p>
                 </div>
               </section>
             </section>
 
             <aside className="space-y-6">
-              <section className="rounded-2xl bg-white p-6 shadow">
-                <h2 className="text-xl font-semibold text-slate-900 mb-4">
-                  Account
-                </h2>
+              <section className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+                <SectionHeader
+                  title="Account"
+                  description="Your current ServiceWingman login."
+                />
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                  <label className="mb-1.5 block text-sm font-medium text-slate-300">
                     Logged In As
                   </label>
-                  <div className="rounded-lg border p-3 text-slate-900 bg-slate-50">
+
+                  <div className="rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-sm text-slate-300">
                     {accountEmail ?? "Unknown"}
                   </div>
                 </div>
               </section>
 
-              <section className="rounded-2xl bg-white p-6 shadow">
-                <h2 className="text-xl font-semibold text-slate-900 mb-1">
-                  Account Security
-                </h2>
-                <p className="text-sm text-slate-500 mb-5">
-                  Update your login password.
-                </p>
+              <section className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+                <SectionHeader
+                  title="Account Security"
+                  description="Update your login password."
+                />
 
                 <form onSubmit={updatePassword} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      New Password
-                    </label>
-                    <input
-                      type="password"
-                      autoComplete="new-password"
-                      className="w-full rounded-lg border p-3 text-slate-900"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                    />
-                  </div>
+                  <TextInput
+                    label="New Password"
+                    value={newPassword}
+                    onChange={setNewPassword}
+                    type="password"
+                    placeholder="Enter new password"
+                    autoComplete="new-password"
+                  />
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Confirm Password
-                    </label>
-                    <input
-                      type="password"
-                      autoComplete="new-password"
-                      className="w-full rounded-lg border p-3 text-slate-900"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                  </div>
+                  <TextInput
+                    label="Confirm Password"
+                    value={confirmPassword}
+                    onChange={setConfirmPassword}
+                    type="password"
+                    placeholder="Confirm new password"
+                    autoComplete="new-password"
+                  />
 
                   <button
                     type="submit"
                     disabled={passwordLoading}
-                    className="w-full rounded-lg bg-red-600 px-5 py-3 text-white font-medium cursor-pointer hover:bg-red-700 transition disabled:opacity-60"
+                    className="w-full rounded-xl bg-red-500 px-5 py-3 font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {passwordLoading ? "Updating..." : "Update Password"}
                   </button>
                 </form>
               </section>
+
+              <section className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+                <h2 className="text-lg font-semibold text-white">
+                  Setup Checklist
+                </h2>
+
+                <div className="mt-4 space-y-3 text-sm">
+                  <ChecklistItem
+                    label="Business profile completed"
+                    complete={Boolean(businessName && phone)}
+                  />
+
+                  <ChecklistItem
+                    label="Public request link generated"
+                    complete={Boolean(publicRequestUrl)}
+                  />
+
+                  <ChecklistItem
+                    label="Email notifications configured"
+                    complete={emailNotifications}
+                  />
+
+                  <ChecklistItem
+                    label="SMS notifications enabled"
+                    complete={smsNotifications}
+                  />
+                </div>
+              </section>
             </aside>
           </div>
         )}
-      </div>
+      </section>
     </main>
+  );
+}
+
+function SectionHeader({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="mb-6">
+      <h2 className="text-xl font-semibold text-white">{title}</h2>
+      <p className="mt-1 text-sm leading-6 text-slate-400">{description}</p>
+    </div>
+  );
+}
+
+function TextInput({
+  label,
+  value,
+  onChange,
+  type = "text",
+  placeholder,
+  disabled = false,
+  helper,
+  autoComplete,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  type?: string;
+  placeholder?: string;
+  disabled?: boolean;
+  helper?: string;
+  autoComplete?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-sm font-medium text-slate-300">
+        {label}
+      </span>
+
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        disabled={disabled}
+        autoComplete={autoComplete}
+        className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-blue-400 focus:ring-4 focus:ring-blue-400/20 disabled:cursor-not-allowed disabled:bg-slate-900 disabled:text-slate-500"
+      />
+
+      {helper && <p className="mt-1.5 text-xs text-slate-500">{helper}</p>}
+    </label>
+  );
+}
+
+function SelectInput({
+  label,
+  value,
+  onChange,
+  children,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-sm font-medium text-slate-300">
+        {label}
+      </span>
+
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-400/20"
+      >
+        {children}
+      </select>
+    </label>
+  );
+}
+
+function ToggleRow({
+  title,
+  description,
+  checked,
+  onChange,
+}: {
+  title: string;
+  description: string;
+  checked: boolean;
+  onChange: (value: boolean) => void;
+}) {
+  return (
+    <label className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-4">
+      <div>
+        <p className="font-medium text-white">{title}</p>
+        <p className="mt-1 text-sm leading-5 text-slate-400">{description}</p>
+      </div>
+
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="h-5 w-5 shrink-0"
+      />
+    </label>
+  );
+}
+
+function ChecklistItem({
+  label,
+  complete,
+}: {
+  label: string;
+  complete: boolean;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4 rounded-xl border border-slate-800 bg-slate-950 px-4 py-3">
+      <span className="text-slate-300">{label}</span>
+
+      <span
+        className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${
+          complete
+            ? "border-green-500/30 bg-green-500/10 text-green-300"
+            : "border-slate-700 bg-slate-900 text-slate-400"
+        }`}
+      >
+        {complete ? "Done" : "Pending"}
+      </span>
+    </div>
   );
 }
