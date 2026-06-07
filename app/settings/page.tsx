@@ -194,11 +194,6 @@ export default function SettingsPage() {
           <h1 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
             Settings
           </h1>
-
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400 md:text-base">
-            Manage your business profile, public request form link,
-            notifications, and account security.
-          </p>
         </div>
 
         {loading ? (

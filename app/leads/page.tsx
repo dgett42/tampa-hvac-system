@@ -184,11 +184,6 @@ export default function LeadsPage() {
               <h1 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
                 Leads
               </h1>
-
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400 md:text-base">
-                Review customer requests, update lead status, and track each
-                opportunity from new submission to booked or closed.
-              </p>
             </div>
 
             <button
