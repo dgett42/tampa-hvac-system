@@ -153,181 +153,325 @@ const statusSeries = [
   { name: "Lost", value: lost },
 ];
 
+function getStatusClass(status: string) {
+  switch (status) {
+    case "new":
+      return "border-blue-500/30 bg-blue-500/10 text-blue-300";
+    case "contacted":
+      return "border-yellow-500/30 bg-yellow-500/10 text-yellow-300";
+    case "booked":
+      return "border-green-500/30 bg-green-500/10 text-green-300";
+    case "closed":
+      return "border-slate-500/30 bg-slate-500/10 text-slate-300";
+    case "lost":
+      return "border-red-500/30 bg-red-500/10 text-red-300";
+    default:
+      return "border-slate-700 bg-slate-900 text-slate-300";
+  }
+}
+
+function getPriorityClass(priority: string) {
+  switch (priority) {
+    case "emergency":
+      return "bg-red-500/10 text-red-300 border-red-500/30";
+    case "high":
+      return "bg-orange-500/10 text-orange-300 border-orange-500/30";
+    case "medium":
+      return "bg-blue-500/10 text-blue-300 border-blue-500/30";
+    case "low":
+      return "bg-slate-500/10 text-slate-300 border-slate-500/30";
+    default:
+      return "bg-slate-500/10 text-slate-300 border-slate-500/30";
+  }
+}
+
 
   return (
-    <main className="p-6 min-h-screen">
-      <Navbar />
+  <main className="page-shell min-h-screen">
+    <Navbar />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 mt-6">
-    <div className="p-4 border rounded-lg">
-    <div className="text-sm text-gray-500">Total Leads</div>
-    <div className="text-xl font-semibold">{totalLeads}</div>
-    </div>
+    <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      {/* Header */}
+      <div className="mb-6 flex flex-col gap-4 rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-2xl shadow-black/20 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-blue-400">
+            ServiceWingman Admin
+          </p>
 
-   <div className="p-4 border rounded-lg">
-    <div className="text-sm text-gray-500">Conversion Rate</div>
-    <div className="text-xl font-semibold">{conversionRate}%</div>
-   </div>
+          <h1 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
+            Dashboard
+          </h1>
 
-   <div className="p-4 border rounded-lg">
-    <div className="text-sm text-gray-500">This Week</div>
-    <div className="text-xl font-semibold">{thisWeek}</div>
-  </div>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400 md:text-base">
+            Track new leads, monitor your sales pipeline, and keep follow-ups
+            organized from one place.
+          </p>
+        </div>
 
-   <div className="p-4 border rounded-lg">
-    <div className="text-sm text-gray-500">Est. Revenue</div>
-    <div className="text-xl font-semibold">
-      ${totalRevenue.toLocaleString()}
-    </div>
-  </div>
-</div>
-<div className="border rounded-lg p-4 mb-6">
-  <div className="font-semibold mb-2">Leads (Last 7 Days)</div>
-  <div style={{ width: "100%", height: 240 }}>
-    <ResponsiveContainer>
-      <LineChart data={series}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
-        <YAxis allowDecimals={false} />
-        <Tooltip labelStyle={{color: "#000000ff"}}/>
-        <Line type="monotone" dataKey="count" strokeWidth={2} dot />
-      </LineChart>
-    </ResponsiveContainer>
-  </div>
-</div>
+        <button
+          type="button"
+          onClick={loadLeads}
+          disabled={loading}
+          className="w-full rounded-xl border border-slate-700 px-4 py-3 text-sm font-semibold text-slate-200 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60 md:w-auto"
+        >
+          {loading ? "Refreshing..." : "Refresh"}
+        </button>
+      </div>
 
-<div className="border rounded-lg p-4 mb-6">
-  <div className="font-semibold mb-2">Pipeline Breakdown</div>
-  <div style={{ width: "100%", height: 260 }}>
-    <ResponsiveContainer>
-      <BarChart data={statusSeries}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis allowDecimals={false} />
-        <Tooltip labelStyle={{color: "#000000ff"}}/>
-        <Legend />
-        <Bar dataKey="value" fill="#3b82f6" />
-      </BarChart>
-    </ResponsiveContainer>
-  </div>
+      {/* Stats */}
+      <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard label="Total Leads" value={totalLeads.toString()} />
+        <StatCard label="Conversion Rate" value={`${conversionRate}%`} />
+        <StatCard label="This Week" value={thisWeek.toString()} />
+        <StatCard label="Est. Revenue" value={`$${totalRevenue.toLocaleString()}`} />
+      </div>
 
-  <div className="mt-3 text-sm text-gray-600 flex flex-wrap gap-4">
-    <div>Booked rate: <span className="font-semibold text-White">{bookedRate}%</span></div>
-    <div>Close rate: <span className="font-semibold text-White">{closeRate}%</span></div>
-    <div>Emergency: <span className="font-semibold text-White">{emergencyPct}%</span></div>
-  </div>
-</div>
+      {/* Charts */}
+      <div className="mb-6 grid gap-6 xl:grid-cols-2">
+        <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl shadow-black/20">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold text-white">
+              Leads Last 7 Days
+            </h2>
+            <p className="mt-1 text-sm text-slate-400">
+              Daily lead volume from recent submissions.
+            </p>
+          </div>
 
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={series}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                <XAxis dataKey="date" stroke="#94a3b8" fontSize={12} />
+                <YAxis allowDecimals={false} stroke="#94a3b8" fontSize={12} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#020617",
+                    border: "1px solid #334155",
+                    borderRadius: "12px",
+                    color: "#f8fafc",
+                  }}
+                  labelStyle={{ color: "#f8fafc" }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="count"
+                  stroke="#3b82f6"
+                  strokeWidth={3}
+                  dot={{ r: 4 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
 
+        <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl shadow-black/20">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold text-white">
+              Pipeline Breakdown
+            </h2>
+            <p className="mt-1 text-sm text-slate-400">
+              Current leads by pipeline stage.
+            </p>
+          </div>
 
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={statusSeries}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} />
+                <YAxis allowDecimals={false} stroke="#94a3b8" fontSize={12} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#020617",
+                    border: "1px solid #334155",
+                    borderRadius: "12px",
+                    color: "#f8fafc",
+                  }}
+                  labelStyle={{ color: "#f8fafc" }}
+                />
+                <Legend />
+                <Bar dataKey="value" fill="#3b82f6" radius={[8, 8, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
 
-      <div className="space-y-4">
-        {leads.map((lead) => (
-        <div key={lead.id} className="border p-4 rounded-lg">
-       <div className="flex justify-between items-center">
-      <div>
-        <div className="font-semibold">{lead.name}</div>
-        <div>{lead.phone}</div>
-        <div className="text-sm text-gray-600">
-          Priority: {lead.priority}
+          <div className="mt-4 grid gap-3 text-sm text-slate-400 sm:grid-cols-3">
+            <div className="rounded-xl border border-slate-800 bg-slate-950 p-3">
+              Booked rate:{" "}
+              <span className="font-semibold text-white">{bookedRate}%</span>
+            </div>
+
+            <div className="rounded-xl border border-slate-800 bg-slate-950 p-3">
+              Close rate:{" "}
+              <span className="font-semibold text-white">{closeRate}%</span>
+            </div>
+
+            <div className="rounded-xl border border-slate-800 bg-slate-950 p-3">
+              Emergency:{" "}
+              <span className="font-semibold text-white">{emergencyPct}%</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <select
-        value={lead.status}
-        onChange={async (e) => {
-          await supabase
-            .from("leads")
-            .update({ status: e.target.value })
-            .eq("id", lead.id);
+      {/* Leads */}
+      <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl shadow-black/20">
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-white">Recent Leads</h2>
+            <p className="mt-1 text-sm text-slate-400">
+              Review incoming requests and update each lead status.
+            </p>
+          </div>
 
-          loadLeads();
-        }}
-        className={`border p-2 rounded text-black ${
-          lead.status === "new"
-            ? "bg-blue-100"
-            : lead.status === "contacted"
-            ? "bg-yellow-100"
-            : lead.status === "booked"
-            ? "bg-green-100"
-            : lead.status === "closed"
-            ? "bg-gray-300"
-            : lead.status === "lost"
-            ? "bg-red-100"
-            : ""
-          
-        }`}
-      >
-        <option value="new">New</option>
-        <option value="contacted">Contacted</option>
-        <option value="booked">Booked</option>
-        <option value="closed">Closed</option>
-        <option value="lost">Lost</option>
-      </select>
-    </div>
-
-    <p className="mt-2">{lead.issue}</p>
-
-    {/* Show revenue input if lead is closed */}
-    
-    {lead.status === "closed" && (
-  <div className="mt-2 flex gap-2">
-    <input
-      type="text"
-      inputMode="decimal"
-      placeholder="Enter revenue"
-      className="border p-2 rounded w-full text-black bg-white"
-      value={revenueInputs[lead.id] ?? (lead.revenue?.toString() ?? "")}
-      onChange={(e) => {
-        setRevenueInputs((prev) => ({
-          ...prev,
-          [lead.id]: e.target.value,
-        }));
-      }}
-    />
-
-    <button
-      className="px-3 rounded bg-black text-white"
-      onClick={async () => {
-        const raw = revenueInputs[lead.id] ?? "";
-        const value = Number(raw);
-
-        if (raw.trim() === "" || Number.isNaN(value)) {
-          alert("Enter a valid revenue amount");
-          return;
-        }
-
-        const { error } = await supabase
-          .from("leads")
-          .update({ revenue: value })
-          .eq("id", lead.id);
-
-        if (error) {
-          console.error("Revenue update failed:", error);
-          alert(error.message);
-          return;
-        }
-
-        loadLeads();
-      }}
-    >
-      Save
-    </button>
-  </div>
-)}
-    <div className="text-xs text-gray-500 mt-2">
-      {new Date(lead.created_at).toLocaleString("en-US", {
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      })}
-    </div>
-  </div>
-))}
+          <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1 text-sm text-slate-300">
+            {totalLeads} total
+          </span>
         </div>
-    </main>
+
+        {loading ? (
+          <div className="rounded-2xl border border-slate-800 bg-slate-950 p-6 text-center text-slate-400">
+            Loading leads...
+          </div>
+        ) : leads.length === 0 ? (
+          <div className="rounded-2xl border border-slate-800 bg-slate-950 p-6 text-center">
+            <p className="font-medium text-white">No leads yet</p>
+            <p className="mt-2 text-sm text-slate-400">
+              New HVAC requests will appear here once customers submit the form.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {leads.map((lead) => (
+              <div
+                key={lead.id}
+                className="rounded-2xl border border-slate-800 bg-slate-950 p-4"
+              >
+                <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="truncate text-lg font-semibold text-white">
+                        {lead.name}
+                      </h3>
+
+                      <span
+                        className={`rounded-full border px-2.5 py-1 text-xs font-medium ${getPriorityClass(
+                          lead.priority
+                        )}`}
+                      >
+                        {lead.priority}
+                      </span>
+                    </div>
+
+                    <div className="mt-2 flex flex-col gap-1 text-sm text-slate-400 sm:flex-row sm:gap-4">
+                      <span>{lead.phone}</span>
+                      <span>
+                        {new Date(lead.created_at).toLocaleString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                    </div>
+                  </div>
+
+                  <select
+                    value={lead.status}
+                    onChange={async (e) => {
+                      await supabase
+                        .from("leads")
+                        .update({ status: e.target.value })
+                        .eq("id", lead.id);
+
+                      loadLeads();
+                    }}
+                    className={`w-full rounded-xl border px-3 py-2 text-sm font-medium outline-none md:w-auto ${getStatusClass(
+                      lead.status
+                    )}`}
+                  >
+                    <option value="new">New</option>
+                    <option value="contacted">Contacted</option>
+                    <option value="booked">Booked</option>
+                    <option value="closed">Closed</option>
+                    <option value="lost">Lost</option>
+                  </select>
+                </div>
+
+                <p className="mt-4 max-h-40 overflow-y-auto whitespace-pre-wrap rounded-xl border border-slate-800 bg-slate-900 p-4 text-sm leading-6 text-slate-300">
+                  {lead.issue}
+                </p>
+
+                {lead.status === "closed" && (
+                  <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      placeholder="Enter revenue"
+                      className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-slate-100 outline-none placeholder:text-slate-500 focus:border-blue-400 focus:ring-4 focus:ring-blue-400/20"
+                      value={
+                        revenueInputs[lead.id] ??
+                        (lead.revenue?.toString() ?? "")
+                      }
+                      onChange={(e) => {
+                        setRevenueInputs((prev) => ({
+                          ...prev,
+                          [lead.id]: e.target.value,
+                        }));
+                      }}
+                    />
+
+                    <button
+                      type="button"
+                      className="rounded-xl bg-blue-500 px-5 py-3 font-semibold text-white transition hover:bg-blue-400 sm:w-auto"
+                      onClick={async () => {
+                        const raw = revenueInputs[lead.id] ?? "";
+                        const value = Number(raw);
+
+                        if (raw.trim() === "" || Number.isNaN(value)) {
+                          alert("Enter a valid revenue amount");
+                          return;
+                        }
+
+                        const { error } = await supabase
+                          .from("leads")
+                          .update({ revenue: value })
+                          .eq("id", lead.id);
+
+                        if (error) {
+                          console.error("Revenue update failed:", error);
+                          alert(error.message);
+                          return;
+                        }
+
+                        loadLeads();
+                      }}
+                    >
+                      Save
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  </main>
+);
+
+function StatCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl shadow-black/20">
+      <p className="text-sm font-medium text-slate-400">{label}</p>
+      <p className="mt-2 text-3xl font-bold tracking-tight text-white">
+        {value}
+      </p>
+    </div>
   );
+}
+
 }
 
 
