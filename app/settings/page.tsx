@@ -39,10 +39,13 @@ export default function SettingsPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const publicRequestUrl = useMemo(() => {
-    if (!slug) return "";
-    if (typeof window === "undefined") return "";
-    return `${window.location.origin}/requests/${slug}`;
-  }, [slug]);
+  if (!slug) return "";
+
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://servicewingman.co";
+
+  return `${siteUrl}/requests/${slug}`;
+}, [slug]);
 
   useEffect(() => {
     async function loadSettings() {
