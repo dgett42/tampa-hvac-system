@@ -8,9 +8,12 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/90 backdrop-blur">
-      <div className="mx-auto max-w-6xl px-6 py-5">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold tracking-tight text-white">
+      <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6">
+        <div className="flex items-center justify-between gap-4">
+          <Link
+            href="/"
+            className="min-w-0 flex-1 truncate text-xl font-bold tracking-tight text-white sm:text-2xl"
+          >
             ServiceWingman
           </Link>
 
@@ -43,11 +46,11 @@ export default function Navbar() {
             </Link>
           </nav>
 
-          {/* Mobile menu button */}
+          {/* Mobile button */}
           <button
             type="button"
             onClick={() => setOpen((current) => !current)}
-            className="inline-flex w-auto items-center justify-center rounded-lg border border-slate-700 px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-900 md:hidden"
+            className="inline-flex w-auto shrink-0 items-center justify-center rounded-lg border border-slate-700 px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-900 md:hidden"
             aria-label="Toggle navigation menu"
             aria-expanded={open}
           >
@@ -57,27 +60,23 @@ export default function Navbar() {
 
         {/* Mobile nav */}
         {open && (
-          <nav className="mt-5 grid gap-2 border-t border-slate-800 pt-5 text-sm font-medium text-slate-300 md:hidden">
+          <nav className="mt-4 grid gap-2 border-t border-slate-800 pt-4 text-sm font-medium text-slate-300 md:hidden">
             <MobileNavLink href="/" label="Home" onClick={() => setOpen(false)} />
-
             <MobileNavLink
               href="/features"
               label="Features"
               onClick={() => setOpen(false)}
             />
-
             <MobileNavLink
               href="/legaldocs/privacy-policy"
               label="Privacy Policy"
               onClick={() => setOpen(false)}
             />
-
             <MobileNavLink
               href="/legaldocs/terms-and-conditions"
               label="Terms and Conditions"
               onClick={() => setOpen(false)}
             />
-
             <MobileNavLink
               href="/admin"
               label="Admin"
