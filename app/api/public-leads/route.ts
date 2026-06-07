@@ -4,7 +4,30 @@ import { createClient } from "@supabase/supabase-js";
 export async function POST(req: Request) {
   const body = await req.json();
 
-  const { slug, name, phone, email, issue, priority } = body;
+  const {   
+    slug,
+    name,
+    phone,
+    email,
+    streetAddress,
+    city,
+    state,
+    zipCode,
+    propertyType,
+    serviceType,
+    priority,
+    preferredDate,
+    preferredTime,
+    systemType,
+    systemAge,
+    systemBrand,
+    lastMaintenance,
+    issue,
+    issueStarted,
+    currentTemp,
+    accessNotes,
+    smsConsent,
+    authorized, } = body;
   const cleanSlug = String(slug).trim().toLowerCase();
 
   const supabaseAdmin = createClient(
@@ -30,18 +53,42 @@ export async function POST(req: Request) {
     );
   }
 
-  const { error: insertError } = await supabaseAdmin.from("leads").insert({
-    name,
-    phone,
-    email,
-    issue,
-    priority: priority || "medium",
-    status: "new",
-    company_id: company.id,
-  });
+  const { error: leadError } = await supabaseAdmin.from("leads").insert({
+  company_id: company.id,
 
-  if (insertError) {
-    console.error("Lead insert error:", insertError);
+  name,
+  phone,
+  email,
+
+  street_address: streetAddress,
+  city,
+  state,
+  zip_code: zipCode,
+  property_type: propertyType,
+
+  service_type: serviceType,
+  priority,
+  preferred_date: preferredDate || null,
+  preferred_time: preferredTime,
+
+  system_type: systemType,
+  system_age: systemAge,
+  system_brand: systemBrand,
+  last_maintenance: lastMaintenance,
+
+  issue,
+  issue_started: issueStarted,
+  current_temp: currentTemp,
+  access_notes: accessNotes,
+
+  sms_consent: smsConsent,
+  authorized,
+
+  status: "new",
+});
+
+  if (leadError) {
+    console.error("Lead insert error:", leadError);
 
     return NextResponse.json(
       { error: "Could not create lead" },

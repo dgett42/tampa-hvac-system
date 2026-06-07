@@ -8,16 +8,40 @@ import Navbar from "@/components/Navbar";
 
 type Lead = {
   id: string;
+  company_id?: string;
+  user_id?: string;
+
   name: string;
   phone: string;
   email: string | null;
-  status: string;
-  created_at: string;
+
+  street_address: string | null;
+  city: string | null;
+  state: string | null;
+  zip_code: string | null;
+  property_type: string | null;
+
+  service_type: string | null;
   priority: string;
+  preferred_date: string | null;
+  preferred_time: string | null;
+
+  system_type: string | null;
+  system_age: string | null;
+  system_brand: string | null;
+  last_maintenance: string | null;
+
   issue: string;
+  issue_started: string | null;
+  current_temp: string | null;
+  access_notes: string | null;
+
+  sms_consent: boolean | null;
+  authorized: boolean | null;
+
+  status: string;
   revenue: number | null;
-  user_id?: string; 
-  company_id?: string;
+  created_at: string;
 };
 
 const STATUS_ORDER = ["new", "contacted", "booked", "closed", "lost"] as const;

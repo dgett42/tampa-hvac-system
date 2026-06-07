@@ -14,9 +14,30 @@ export async function POST(
       name,
       phone,
       email,
+
+      streetAddress,
+      city,
+      state,
+      zipCode,
+      propertyType,
+
       serviceType,
-      message,
+      priority,
+      preferredDate,
+      preferredTime,
+
+      systemType,
+      systemAge,
+      systemBrand,
+      lastMaintenance,
+
+      issue,
+      issueStarted,
+      currentTemp,
+      accessNotes,
+
       smsConsent,
+      authorized,
     } = body;
 
     const { data: company, error: companyError } = await supabaseAdmin
@@ -38,17 +59,43 @@ export async function POST(
       .from("leads")
       .insert({
         company_id: company.id,
+
         name,
-        client_phone: phone,
+        phone,
         email,
+
+        street_address: streetAddress,
+        city,
+        state,
+        zip_code: zipCode,
+        property_type: propertyType,
+
         service_type: serviceType,
-        message,
+        priority: priority || "medium",
+        preferred_date: preferredDate || null,
+        preferred_time: preferredTime,
+
+        system_type: systemType,
+        system_age: systemAge,
+        system_brand: systemBrand,
+        last_maintenance: lastMaintenance,
+
+        issue,
+        issue_started: issueStarted,
+        current_temp: currentTemp,
+        access_notes: accessNotes,
+
         sms_consent: Boolean(smsConsent),
+        authorized: Boolean(authorized),
+
+        status: "new",
       })
       .select()
       .single();
 
     if (leadError || !lead) {
+      console.error("Lead insert error:", leadError);
+
       return NextResponse.json(
         { error: "Failed to create lead" },
         { status: 500 }
@@ -64,10 +111,12 @@ export async function POST(
       await sendSms(
         company.phone,
         `New HVAC lead for ${company.name}:
-            Name: ${name}
-            Phone: ${phone}
-            Service: ${serviceType || "Not specified"}
-            Message: ${message || "No message provided"}`
+Name: ${name}
+Phone: ${phone}
+Service: ${serviceType || "Not specified"}
+Priority: ${priority || "medium"}
+City: ${city || "Not provided"}
+Issue: ${issue || "No issue provided"}`
       );
 
       await supabaseAdmin
