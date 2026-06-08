@@ -1,10 +1,13 @@
 import Link from "next/link";
 import Navbar from "@/components/Navbarb";
+import upgradeButton from "@/components/upgradeButtons";
+import UpgradeButton from "@/components/upgradeButtons";
 
 const plans = [
   {
     name: "Starter",
-    price: "$99",
+    planId: "starter",
+    price: "$149",
     period: "/mo",
     description: "For small service businesses just tracking leads.",
     badge: "",
@@ -21,7 +24,8 @@ const plans = [
   },
   {
     name: "Pro",
-    price: "$199",
+    planId: "pro",
+    price: "$249",
     period: "/mo",
     description:
       "For businesses that want faster follow-up and better organization.",
@@ -41,7 +45,8 @@ const plans = [
   },
   {
     name: "Wingman AI",
-    price: "$299",
+    planId: "ai",
+    price: "$399",
     period: "/mo",
     description: "For companies that want insights and sales help.",
     badge: "Growth Plan",
@@ -137,16 +142,18 @@ export default function PricingPage() {
                 )}
               </div>
 
-              <Link
-                href={plan.href}
-                className={`mt-6 rounded-xl px-5 py-3 text-center font-semibold transition ${
-                  plan.highlighted
-                    ? "bg-blue-500 text-white hover:bg-blue-400"
-                    : "border border-slate-700 text-slate-200 hover:bg-slate-800"
-                }`}
-              >
-                {plan.cta}
-              </Link>
+              {plan.planId ? (
+                <div className="mt-6">
+                  <UpgradeButton plan={plan.planId as "starter" | "pro" | "ai"} />
+                </div>
+              ) : (
+                <Link
+                  href={plan.href}
+                  className="mt-6 rounded-xl border border-slate-700 px-5 py-3 text-center font-semibold text-slate-200 transition hover:bg-slate-800"
+                >
+                  {plan.cta}
+                </Link>
+              )}
 
               <div className="mt-6 border-t border-slate-800 pt-6">
                 <p className="mb-4 text-sm font-semibold text-white">

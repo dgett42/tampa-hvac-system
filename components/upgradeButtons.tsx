@@ -22,8 +22,11 @@ export default function UpgradeButton({ plan }: { plan: Plan }) {
   }
 
   return (
-    <button onClick={handleUpgrade}>
-      Upgrade
-    </button>
+    <button 
+        onClick={handleUpgrade}
+        className="w-full rounded-xl bg-blue-500 px-5 py-3 text-center font-semibold text-white transition hover:bg-blue-400"
+      >
+        Upgrade
+      </button>
   );
 }

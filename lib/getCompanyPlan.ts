@@ -1,5 +1,13 @@
 import { createClient } from "@/utils/supabase/server";
 
+export type Plan = "starter" | "pro" | "ai";
+
+const planRank: Record<Plan, number> = {
+  starter: 1,
+  pro: 2,
+  ai: 3,
+};
+
 export async function getCompanyPlan() {
   const supabase = await createClient();
 
@@ -24,4 +32,22 @@ export async function getCompanyPlan() {
     .single();
 
   return company;
+}
+
+export async function hasPlan(requiredPlan: Plan) {
+  const company = await getCompanyPlan();
+
+  if (!company) return false;
+
+  if (company.subscription_status !== "active") {
+    return false;
+  }
+
+  const currentPlan = company.plan as Plan;
+
+  if (!currentPlan || !planRank[currentPlan]) {
+    return false;
+  }
+
+  return planRank[currentPlan] >= planRank[requiredPlan];
 }
