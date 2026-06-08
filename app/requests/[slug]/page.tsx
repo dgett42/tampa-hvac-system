@@ -47,41 +47,41 @@ export default function PublicRequestPage() {
 
     const fullIssueDetails = `
     HVAC SERVICE REQUEST
-      
+
     CONTACT:
     Name: ${name}
     Phone: ${phone}
     Email: ${email || "Not provided"}
-      
+
     SERVICE ADDRESS:
     Street Address: ${streetAddress}
     City: ${city}
     State: ${stateValue}
     ZIP Code: ${zipCode}
     Property Type: ${propertyType || "Not provided"}
-      
+
     REQUEST DETAILS:
     Service Type: ${serviceType || "Not provided"}
     Priority: ${priority}
     Preferred Date: ${preferredDate || "Not provided"}
     Preferred Time: ${preferredTime || "Not provided"}
-      
+
     HVAC SYSTEM DETAILS:
     System Type: ${systemType || "Not sure / Not provided"}
     Approximate System Age: ${systemAge || "Not sure / Not provided"}
     System Brand: ${systemBrand || "Not provided"}
     Last Maintenance: ${lastMaintenance || "Not sure / Not provided"}
-      
+
     ISSUE DETAILS:
     Issue Started: ${issueStarted || "Not provided"}
     Current Indoor Temperature: ${currentTemp || "Not provided"}
-      
+
     Customer Description:
     ${issue}
-      
+
     ACCESS NOTES:
     ${accessNotes || "None provided"}
-      
+
     CONSENT:
     Authorized to request service: ${authorized ? "Yes" : "No"}
     SMS/Phone consent: ${smsConsent ? "Yes" : "No"}
@@ -126,6 +126,7 @@ export default function PublicRequestPage() {
     const responseText = await res.text();
     console.log("company response:", responseText);
     console.log("response", responseText);
+    console.log("full issue details being sent:", fullIssueDetails);
 
     setLoading(false);
 
