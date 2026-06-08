@@ -98,7 +98,11 @@ export async function POST(
       console.error("Lead insert error:", leadError);
 
       return NextResponse.json(
-        { error: "Failed to create lead" },
+        { error: "Failed to create lead",
+          details: leadError?.message,
+          code: leadError?.code,
+          hint: leadError?.hint,
+        },
         { status: 500 }
       );
     }
