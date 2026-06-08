@@ -29,21 +29,21 @@ export default function Navbar() {
             </Link>
 
             <Link
-              href="/legaldocs/privacy-policy"
+              href="/contact"
               className="transition hover:text-white"
             >
-              Privacy Policy
+              Contact Us
             </Link>
 
             <Link
-              href="/legaldocs/terms-and-conditions"
+              href="/wingmanAi"
               className="transition hover:text-white"
             >
-              Terms and Conditions
+              WingmanAI
             </Link>
 
             <Link href="/admin" className="transition hover:text-white">
-              Admin
+              Login
             </Link>
           </nav>
 
@@ -71,20 +71,26 @@ export default function Navbar() {
             />
 
             <MobileNavLink
-              href="/legaldocs/privacy-policy"
-              label="Privacy Policy"
+              href="/contact"
+              label="Contact Us"
               onClick={() => setOpen(false)}
             />
 
             <MobileNavLink
-              href="/legaldocs/terms-and-conditions"
-              label="Terms and Conditions"
+              href="/wingmanAi"
+              label="WingmanAI"
               onClick={() => setOpen(false)}
             />
 
             <MobileNavLink
               href="/admin"
-              label="Admin"
+              label="Login"
+              onClick={() => setOpen(false)}
+            />
+
+            <MobileNavLink
+              href="/pricing"
+              label="Pricing"
               onClick={() => setOpen(false)}
             />
           </nav>
