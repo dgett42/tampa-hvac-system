@@ -36,28 +36,28 @@ export default function ContactPage() {
               <ContactCard
                 title="General Questions"
                 description="Ask about ServiceWingman, features, or setup."
-                link="mailto:support@servicewingman.co?subject=ServiceWingman Question"
-                linkText="support@servicewingman.co"
+                link="mailto:wingmancrm@servicewingman.co?subject=ServiceWingman Question"
+                linkText="wingmancrm@servicewingman.co"
               />
 
               <ContactCard
                 title="Pricing & Plans"
                 description="Ask about Starter, Pro, Wingman AI, or Enterprise."
-                link="mailto:support@servicewingman.co?subject=ServiceWingman Pricing"
+                link="mailto:wingmancrm@servicewingman.co?subject=ServiceWingman Pricing"
                 linkText="Ask about pricing"
               />
 
               <ContactCard
                 title="Demo Request"
                 description="Want to see how the dashboard and lead form work?"
-                link="mailto:support@servicewingman.co?subject=ServiceWingman Demo Request"
+                link="mailto:wingmancrm@servicewingman.co?subject=ServiceWingman Demo Request"
                 linkText="Request a demo"
               />
 
               <ContactCard
                 title="Support"
                 description="Need help with your account, dashboard, or public form?"
-                link="mailto:support@servicewingman.co?subject=ServiceWingman Support"
+                link="mailto:wingmancrm@servicewingman.co?subject=ServiceWingman Support"
                 linkText="Get support"
               />
             </div>
@@ -81,7 +81,7 @@ export default function ContactPage() {
               </h2>
 
               <div className="mt-5 space-y-4 text-sm">
-                <InfoBlock label="Email" value="support@servicewingman.co" />
+                <InfoBlock label="Email" value="wingmancrm@servicewingman.co" />
                 <InfoBlock label="Website" value="servicewingman.co" />
                 <InfoBlock label="Business Type" value="Lead management software for home service businesses" />
               </div>
