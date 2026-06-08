@@ -141,9 +141,10 @@ export default function AdminPage() {
     totalLeads > 0 ? ((emergencyCount / totalLeads) * 100).toFixed(1) : "0";
 
   const bookedRate =
-    totalLeads > 0 ? ((booked / totalLeads) * 100).toFixed(1) : "0";
+    totalLeads > 0 ? (((booked + closed) / totalLeads) * 100).toFixed(1) : "0";
 
-  const closeRate = booked > 0 ? ((closed / booked) * 100).toFixed(1) : "0";
+  const closeRate =
+    totalLeads > 0 ? ((closed / totalLeads) * 100).toFixed(1) : "0";
 
   const now = new Date();
   const sevenDaysAgo = new Date();
