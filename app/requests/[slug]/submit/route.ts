@@ -115,13 +115,13 @@ export async function POST(
     ) {
       await sendSms(
         company.phone,
-        `New HVAC lead for ${company.name}:
-Name: ${name}
-Phone: ${phone}
-Service: ${serviceType || "Not specified"}
-Priority: ${priority || "medium"}
-City: ${city || "Not provided"}
-Issue: ${issue || "No issue provided"}`
+         `New HVAC lead for ${company.name}:
+          Name: ${name}
+          Phone: ${phone}
+          Service: ${serviceType || "Not specified"}
+          Priority: ${priority || "medium"}
+          City: ${city || "Not provided"}
+          Issue: ${issue || "No issue provided"}`
       );
 
       await supabaseAdmin
