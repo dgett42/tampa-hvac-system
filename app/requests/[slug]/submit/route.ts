@@ -12,7 +12,7 @@ export async function POST(
 
     const {
       name,
-      phone,
+      client_phone,
       email,
 
       streetAddress,
@@ -62,7 +62,7 @@ export async function POST(
         company_id: company.id,
 
         name,
-        phone,
+        client_phone: client_phone,
         email,
 
         street_address: streetAddress,
@@ -108,7 +108,6 @@ export async function POST(
     }
 
     // Text the HVAC company
-    // Text the HVAC company
 try {
   if (
     company.sms_enabled &&
@@ -118,12 +117,12 @@ try {
     await sendSms(
       company.phone,
       `New HVAC lead for ${company.name}:
-Name: ${name}
-Phone: ${phone}
-Service: ${serviceType || "Not specified"}
-Priority: ${priority || "medium"}
-City: ${city || "Not provided"}
-Issue: ${issue || "No issue provided"}`
+        Name: ${name}
+        Phone: ${client_phone}
+        Service: ${serviceType || "Not specified"}
+        Priority: ${priority || "medium"}
+        City: ${city || "Not provided"}
+        Issue: ${issue || "No issue provided"}`
     );
 
     const { error: companySmsUpdateError } = await supabaseAdmin
@@ -147,10 +146,10 @@ try {
     company.sms_enabled &&
     company.sms_client_confirmation &&
     smsConsent &&
-    phone
+    client_phone
   ) {
     await sendSms(
-      phone,
+      client_phone,
       `Thanks ${name}, ${company.name} received your HVAC request and will contact you soon. Reply STOP to opt out.`
     );
 
@@ -175,10 +174,10 @@ try {
         company.sms_enabled &&
         company.sms_client_confirmation &&
         smsConsent &&
-        phone
+        client_phone
       ) {
         await sendSms(
-          phone,
+          client_phone,
           `Thanks ${name}, ${company.name} received your HVAC request and will contact you soon. Reply STOP to opt out.`
         );
 
