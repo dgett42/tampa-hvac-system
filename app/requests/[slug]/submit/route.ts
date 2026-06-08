@@ -108,29 +108,66 @@ export async function POST(
     }
 
     // Text the HVAC company
-    if (
-      company.sms_enabled &&
-      company.sms_new_lead_notifications &&
-      company.phone
-    ) {
-      await sendSms(
-        company.phone,
-         `New HVAC lead for ${company.name}:
-          Name: ${name}
-          Phone: ${phone}
-          Service: ${serviceType || "Not specified"}
-          Priority: ${priority || "medium"}
-          City: ${city || "Not provided"}
-          Issue: ${issue || "No issue provided"}`
-      );
+    // Text the HVAC company
+try {
+  if (
+    company.sms_enabled &&
+    company.sms_new_lead_notifications &&
+    company.phone
+  ) {
+    await sendSms(
+      company.phone,
+      `New HVAC lead for ${company.name}:
+Name: ${name}
+Phone: ${phone}
+Service: ${serviceType || "Not specified"}
+Priority: ${priority || "medium"}
+City: ${city || "Not provided"}
+Issue: ${issue || "No issue provided"}`
+    );
 
-      await supabaseAdmin
-        .from("leads")
-        .update({
-          company_sms_sent_at: new Date().toISOString(),
-        })
-        .eq("id", lead.id);
+    const { error: companySmsUpdateError } = await supabaseAdmin
+      .from("leads")
+      .update({
+        company_sms_sent_at: new Date().toISOString(),
+      })
+      .eq("id", lead.id);
+
+    if (companySmsUpdateError) {
+      console.error("Company SMS timestamp update failed:", companySmsUpdateError);
     }
+  }
+} catch (smsError) {
+  console.error("Company SMS failed:", smsError);
+}
+
+// Text the client confirmation
+try {
+  if (
+    company.sms_enabled &&
+    company.sms_client_confirmation &&
+    smsConsent &&
+    phone
+  ) {
+    await sendSms(
+      phone,
+      `Thanks ${name}, ${company.name} received your HVAC request and will contact you soon. Reply STOP to opt out.`
+    );
+
+    const { error: clientSmsUpdateError } = await supabaseAdmin
+      .from("leads")
+      .update({
+        client_sms_sent_at: new Date().toISOString(),
+      })
+      .eq("id", lead.id);
+
+    if (clientSmsUpdateError) {
+      console.error("Client SMS timestamp update failed:", clientSmsUpdateError);
+    }
+  }
+} catch (smsError) {
+  console.error("Client SMS failed:", smsError);
+}
 
     // Text the client confirmation
     try {
