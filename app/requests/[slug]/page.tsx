@@ -19,7 +19,7 @@ export default function PublicRequestPage() {
   const [step, setStep] = useState(1);
 
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [client_phone, setClientPhone] = useState("");
   const [email, setEmail] = useState("");
 
   const [streetAddress, setStreetAddress] = useState("");
@@ -50,7 +50,7 @@ export default function PublicRequestPage() {
   const [success, setSuccess] = useState(false);
 
   function validateCurrentStep() {
-    if (step === 1 && (!name || !phone)) {
+    if (step === 1 && (!name || !client_phone)) {
       alert("Please enter your name and phone number.");
       return false;
     }
@@ -109,7 +109,7 @@ export default function PublicRequestPage() {
       },
       body: JSON.stringify({
         name,
-        phone,
+        client_phone,
         email,
 
         streetAddress,
@@ -158,7 +158,7 @@ export default function PublicRequestPage() {
     setSuccess(false);
 
     setName("");
-    setPhone("");
+    setClientPhone("");
     setEmail("");
     setStreetAddress("");
     setCity("");
@@ -266,8 +266,8 @@ export default function PublicRequestPage() {
 
                   <TextInput
                     label="Phone Number"
-                    value={phone}
-                    onChange={setPhone}
+                    value={client_phone}
+                    onChange={setClientPhone}
                     placeholder="(555) 123-4567"
                     type="tel"
                     required
@@ -556,7 +556,7 @@ export default function PublicRequestPage() {
                 <div className="grid gap-4 lg:grid-cols-2">
                   <ReviewCard title="Contact">
                     <ReviewRow label="Name" value={name} />
-                    <ReviewRow label="Phone" value={phone} />
+                    <ReviewRow label="Phone" value={client_phone} />
                     <ReviewRow label="Email" value={email || "Not provided"} />
                   </ReviewCard>
 
