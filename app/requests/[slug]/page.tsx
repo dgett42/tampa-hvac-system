@@ -842,12 +842,12 @@ function CheckboxInput({
   return (
     <label className="flex items-start gap-3 rounded-2xl border border-slate-800 bg-slate-950 p-4 text-sm leading-6 text-slate-300">
       <input
-        type="checkbox"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-        required={required}
-        className="mt-1 h-4 w-4 shrink-0 rounded border-slate-600"
-      />
+          type="checkbox"
+          checked={checked}
+          onChange={(e) => onChange(e.target.checked)}
+          required={required}
+          className="mt-1 !h-4 !w-4 shrink-0 rounded border-slate-600"
+        />
 
       <span>{label}</span>
     </label>
