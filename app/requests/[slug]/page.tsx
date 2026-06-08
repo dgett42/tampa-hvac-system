@@ -87,21 +87,41 @@ Authorized to request service: ${authorized ? "Yes" : "No"}
 SMS/Phone consent: ${smsConsent ? "Yes" : "No"}
     `.trim();
 
-    const res = await fetch("/api/public-leads", {
+    const res = await fetch(`/requests/${slug}/submit`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        slug,
-        name,
-        phone,
-        email,
-        issue: fullIssueDetails,
-        priority,
-        smsConsent,
-      }),
-    });
+          name,
+          phone,
+          email,
+
+          streetAddress,
+          city,
+          state: stateValue,
+          zipCode,
+          propertyType,
+
+          serviceType,
+          priority,
+          preferredDate,
+          preferredTime,
+
+          systemType,
+          systemAge,
+          systemBrand,
+          lastMaintenance,
+
+          issue,
+          issueStarted,
+          currentTemp,
+          accessNotes,
+
+          smsConsent,
+          authorized,
+        }),
+      });
 
     const responseText = await res.text();
     console.log("status", res.status);
