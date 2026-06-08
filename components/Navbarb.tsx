@@ -24,6 +24,10 @@ export default function Navbar() {
               Features
             </Link>
 
+            <Link href="/pricing" className="transition hover:text-white">
+              Pricing
+            </Link>
+
             <Link
               href="/legaldocs/privacy-policy"
               className="transition hover:text-white"
