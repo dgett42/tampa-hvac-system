@@ -43,46 +43,41 @@ export default function PublicRequestPage() {
     setLoading(true);
     setSuccess(false);
 
-    const cleanSlug = String(slug).trim().toLowerCase();
+    const res = await fetch(`/requests/${slug}/submit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+          name,
+          phone,
+          email,
 
-console.log("slug from params:", slug);
-console.log("clean slug used in fetch:", cleanSlug);
+          streetAddress,
+          city,
+          state: stateValue,
+          zipCode,
+          propertyType,
 
-const res = await fetch(`/requests/${encodeURIComponent(cleanSlug)}/submit`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    name,
-    phone,
-    email,
+          serviceType,
+          priority,
+          preferredDate,
+          preferredTime,
 
-    streetAddress,
-    city,
-    state: stateValue,
-    zipCode,
-    propertyType,
+          systemType,
+          systemAge,
+          systemBrand,
+          lastMaintenance,
 
-    serviceType,
-    priority,
-    preferredDate,
-    preferredTime,
+          issue,
+          issueStarted,
+          currentTemp,
+          accessNotes,
 
-    systemType,
-    systemAge,
-    systemBrand,
-    lastMaintenance,
-
-    issue,
-    issueStarted,
-    currentTemp,
-    accessNotes,
-
-    smsConsent,
-    authorized,
-  }),
-});
+          smsConsent,
+          authorized,
+        }),
+      });
 
     const responseText = await res.text();
     console.log("company response:", responseText);

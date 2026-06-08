@@ -133,23 +133,34 @@ export async function POST(
     }
 
     // Text the client confirmation
-    if (
-      company.sms_enabled &&
-      company.sms_client_confirmation &&
-      smsConsent &&
-      phone
-    ) {
-      await sendSms(
-        phone,
-        `Thanks ${name}, ${company.name} received your HVAC request and will contact you soon. Reply STOP to opt out.`
-      );
+    try {
+      if (
+        company.sms_enabled &&
+        company.sms_client_confirmation &&
+        smsConsent &&
+        phone
+      ) {
+        await sendSms(
+          phone,
+          `Thanks ${name}, ${company.name} received your HVAC request and will contact you soon. Reply STOP to opt out.`
+        );
 
-      await supabaseAdmin
-        .from("leads")
-        .update({
-          client_sms_sent_at: new Date().toISOString(),
-        })
-        .eq("id", lead.id);
+        const { error: clientSmsUpdateError } = await supabaseAdmin
+          .from("leads")
+          .update({
+            client_sms_sent_at: new Date().toISOString(),
+          })
+          .eq("id", lead.id);
+
+        if (clientSmsUpdateError) {
+          console.error(
+            "Client SMS timestamp update failed:",
+            clientSmsUpdateError
+          );
+        }
+      }
+    } catch (smsError) {
+      console.error("Client SMS failed:", smsError);
     }
 
     return NextResponse.json({
