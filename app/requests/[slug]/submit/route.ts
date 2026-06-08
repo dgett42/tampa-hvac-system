@@ -49,6 +49,7 @@ export async function POST(
       .single();
 
     if (companyError || !company) {
+      console.log("Company lookup error:", companyError);
       return NextResponse.json(
         { error: "Company not found" },
         { status: 404 }
