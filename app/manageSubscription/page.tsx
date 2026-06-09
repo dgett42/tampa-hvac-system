@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Navbar from "@/components/Navbarb";
+import Navbar from "@/components/Navbar";
 import UpgradeButton from "@/components/upgradeButtons";
 import { getCompanyPlan } from "@/lib/getCompanyPlan";
 
@@ -7,19 +7,19 @@ const plans = [
   {
     name: "Starter",
     planId: "starter",
-    price: "$99/mo",
+    price: "$149/mo",
     description: "Basic lead tracking and dashboard access.",
   },
   {
     name: "Pro",
     planId: "pro",
-    price: "$199/mo",
+    price: "$249/mo",
     description: "SMS notifications, automation, and better analytics.",
   },
   {
     name: "Wingman AI",
     planId: "ai",
-    price: "$299/mo",
+    price: "$399/mo",
     description: "AI lead scoring, follow-up suggestions, and insights.",
   },
 ] as const;

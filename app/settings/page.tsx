@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Navbar from "@/components/Navbar";
 import { createClient } from "@/utils/supabase/client";
-
+import Link from "next/link";
 type CompanySettings = {
   id: string;
   name: string;
@@ -358,10 +358,10 @@ export default function SettingsPage() {
                   </div>
                 </div>
 
-                <div> 
-                  <p className="mt-4 text-sm text-slate-500">
+                <div className="mt-6 border-t border-slate-800 pt-6"> 
+                  <Link href="/manageSubscription" className="rounded-xl bg-blue-500 px-5 py-3 font-semibold text-white transition hover:bg-blue-400">
                     Manage Subscription
-                  </p>
+                  </Link>
                 </div>
               </section>
 
