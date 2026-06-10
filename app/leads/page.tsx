@@ -5,6 +5,7 @@ export const dynamic = "force-dynamic";
 import { useEffect, useMemo, useState } from "react";
 import Navbar from "@/components/Navbar";
 import { createClient } from "@/utils/supabase/client";
+import AiLeadBox from "@/components/aiLeadBox";
 
 type Lead = {
   id: string;
@@ -42,6 +43,14 @@ type Lead = {
   status: string;
   revenue: number | null;
   created_at: string;
+
+  ai_score: number | null;
+  ai_quality: string | null;
+  ai_urgency: string | null;
+  ai_summary: string | null;
+  ai_next_step: string | null;
+  ai_followup_sms: string | null;
+  ai_analyzed_at: string | null;
 };
 
 const statusFilters = [
@@ -342,7 +351,9 @@ export default function LeadsPage() {
 
                     {expanded && (
                       <div className="mt-5 border-t border-slate-800 pt-5">
-                        <div className="grid gap-4 lg:grid-cols-3">
+                        <AiLeadBox lead={lead} />
+                        
+                        <div className="mt-4 grid gap-4 lg:grid-cols-3">
                           <InfoPanel title="Contact">
                             <InfoRow label="Name" value={lead.name} />
                             <InfoRow label="Phone" value={lead.phone} />
