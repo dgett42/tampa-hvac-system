@@ -129,14 +129,14 @@ export default function HomePage() {
               </a>
 
               <Link
-                href="/privacy"
+                href="/legaldocs/privacy"
                 className="rounded-lg border border-slate-700 px-6 py-3 text-center font-semibold text-slate-200 transition hover:border-slate-500 hover:bg-slate-800"
               >
                 Privacy Policy
               </Link>
 
               <Link
-                href="/terms"
+                href="/legaldocs/terms"
                 className="rounded-lg border border-slate-700 px-6 py-3 text-center font-semibold text-slate-200 transition hover:border-slate-500 hover:bg-slate-800"
               >
                 Terms and Conditions
@@ -162,12 +162,12 @@ export default function HomePage() {
               Contact
             </Link>
 
-            <Link href="/privacy" className="hover:text-white">
+            <Link href="/legaldocs/privacy-policy" className="hover:text-white">
               Privacy Policy
             </Link>
 
-            <Link href="/terms" className="hover:text-white">
-              Terms
+            <Link href="/legaldocs/terms-and-conditions" className="hover:text-white">
+              Terms and Conditions
             </Link>
           </div>
         </div>
