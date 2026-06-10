@@ -129,14 +129,14 @@ export default function HomePage() {
               </a>
 
               <Link
-                href="/legaldocs/privacy"
+                href="/legaldocs/privacy-policy"
                 className="rounded-lg border border-slate-700 px-6 py-3 text-center font-semibold text-slate-200 transition hover:border-slate-500 hover:bg-slate-800"
               >
                 Privacy Policy
               </Link>
 
               <Link
-                href="/legaldocs/terms"
+                href="/legaldocs/terms-and-conditions"
                 className="rounded-lg border border-slate-700 px-6 py-3 text-center font-semibold text-slate-200 transition hover:border-slate-500 hover:bg-slate-800"
               >
                 Terms and Conditions
