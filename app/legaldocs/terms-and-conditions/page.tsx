@@ -356,7 +356,7 @@ export default function TermsPage() {
             <div className="mt-4 rounded-xl border border-slate-800 bg-slate-900 p-5">
               <p className="font-semibold text-white">ServiceWingman</p>
               <p>Website: servicewingman.co</p>
-              <p>Email: support@servicewingman.co</p>
+              <p>Email: wingmancrm@servicewingman.co</p>
             </div>
           </section>
         </div>
